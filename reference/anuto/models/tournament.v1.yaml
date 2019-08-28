@@ -1,0 +1,30 @@
+title: Tournament
+type: object
+properties:
+  address:
+    type: string
+  name:
+    type: string
+  playerCount:
+    type: integer
+    default: 0
+  map:
+    $ref: ./map.v1.yaml
+  deadline:
+    type: string
+    format: date-time
+  phase:
+    type: string
+    enum:
+      - commit
+      - reveal
+      - round
+  totalRounds:
+    type: integer
+  currentRound:
+    type: integer
+required:
+  - address
+  - name
+  - playerCount
+  - phase

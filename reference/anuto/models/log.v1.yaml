@@ -1,0 +1,50 @@
+title: Log
+type: object
+description: 'Defines the log of a gameplay, all the actions the player did'
+x-examples:
+  example-1:
+    actions:
+      - type: next wave
+        tick: 107
+      - type: add turret
+        tick: 659
+        typeTurret: projectile
+        position:
+          r: 6
+          c: 3
+      - type: next wave
+        tick: 691
+      - type: next wave
+        tick: 1265
+properties:
+  actions:
+    type: array
+    items:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of action
+          enum:
+            - next wave
+            - add turret
+        tick:
+          type: integer
+          description: Timestamp of action
+        typeTurret:
+          type: string
+        position:
+          type: object
+          properties:
+            r:
+              type: integer
+              description: Row coordinate of turret position
+            c:
+              type: integer
+              description: Column coordinate of turret position
+          required:
+            - r
+            - c
+      required:
+        - type
+        - tick

@@ -1,0 +1,173 @@
+openapi: 3.0.0
+info:
+  title: anuto
+  version: '1.0'
+  license:
+    name: Apache 2.0
+    url: 'https://github.com/cartesi-corp/anuto-server/blob/develop/LICENSE'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /tournaments:
+    get:
+      summary: List of Tournaments
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ./models/tournament.v1.yaml
+              examples: {}
+      parameters:
+        - schema:
+            type: string
+            enum:
+              - commit
+              - reveal
+              - round
+          in: query
+          name: phase
+          description: Filter tournaments by phase
+        - schema:
+            type: string
+            enum:
+              - playerCount
+              - deadline
+          in: query
+          name: sort
+          description: Order of returned tournaments
+  '/maps/{name}':
+    parameters:
+      name: id
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Map Definition
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ./models/map.v1.yaml
+        '404':
+          description: Not Found
+      description: Get the definition of a map
+  '/tournaments/{address}':
+    parameters:
+      name: id
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Tournament Definition
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ./models/tournament.v1.yaml
+        '404':
+          description: Not Found
+  '/tournaments/{address}/players':
+    parameters:
+      name: address
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Players List
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ./models/player.v1.yaml
+        '404':
+          description: Not Found
+      description: List of players who are playing a tournament
+  '/tournaments/{tournament_address}/players/{player_address}':
+    parameters:
+      name: player_address
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Player
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ./models/player.v1.yaml
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      requestBody: {}
+      description: Retrieve specific play of a player in a tournament
+  '/tournaments/{tournament_address}/players/me':
+    parameters:
+      name: tournament_address
+      in: path
+      required: true
+      type: string
+    get:
+      summary: My Play
+      tags: &ref_0 []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ./models/player.v1.yaml
+        '304':
+          description: 'Not Modified, you already have a better score'
+        '403':
+          description: 'Forbidden, tournament is not accepting gameplays'
+        '404':
+          description: Tournament Not Found
+      description: Retrieve my play of the tournament
+    put:
+      summary: Update My Play
+      tags: *ref_0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ./models/player.v1.yaml
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                score:
+                  type: integer
+                  description: My score
+                log:
+                  $ref: ./models/log.v1.yaml
+              required:
+                - score
+                - log
+        description: The result of my gameplay
+      description: Send my play to the tournament
+components:
+  schemas: {}

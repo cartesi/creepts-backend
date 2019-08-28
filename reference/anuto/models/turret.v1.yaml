@@ -1,0 +1,5 @@
+title: Turret
+type: object
+properties:
+  price:
+    type: integer

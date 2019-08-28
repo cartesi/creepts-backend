@@ -1,0 +1,31 @@
+title: GameConfig
+type: object
+x-examples:
+  example-1: {}
+properties:
+  timeStep:
+    type: integer
+  runningInClientSide:
+    type: boolean
+  enemySpawningDeltaTicks:
+    type: integer
+  credits:
+    type: integer
+  lifes:
+    type: integer
+  boardSize:
+    type: object
+    properties:
+      r:
+        type: integer
+      c:
+        type: integer
+  enemiesPathCells:
+    type: array
+    items:
+      type: object
+      properties:
+        r:
+          type: integer
+        c:
+          type: integer

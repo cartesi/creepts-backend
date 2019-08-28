@@ -1,0 +1,27 @@
+title: Map
+type: object
+properties:
+  name:
+    type: string
+  thumbnail:
+    type: string
+    format: uri
+  gameConfig:
+    $ref: ./gameconfig.v1.yaml
+  enemiesData:
+    type: object
+    additionalProperties:
+      type:
+        $ref: ./enemy.v1.yaml
+  turretsData:
+    type: object
+    additionalProperties:
+      type:
+        $ref: ./turret.v1.yaml
+  wavesData:
+    type: array
+    items:
+      $ref: ./wave.v1.yaml
+required:
+  - name
+  - thumbnail

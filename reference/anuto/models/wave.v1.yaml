@@ -1,0 +1,29 @@
+title: Wave
+type: array
+x-examples:
+  example-1:
+    - type: soldier
+      t: 0
+    - type: soldier
+      t: 1
+    - type: soldier
+      t: 2
+    - type: soldier
+      t: 3
+    - type: soldier
+      t: 4
+    - type: soldier
+      t: 5
+description: Definition of a sequence of different enemies entering the battlefield
+items:
+  type: object
+  properties:
+    type:
+      type: string
+      description: Type of the enemy
+    t:
+      type: integer
+      description: Delay from the beginning of the wave the enemy will enter the battlefield
+  required:
+    - type
+    - t
