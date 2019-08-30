@@ -1,27 +1,59 @@
 title: Map
 type: object
 properties:
+  slug:
+    type: string
+    description: Slug of map to be used in URLs
   name:
     type: string
-  thumbnail:
-    type: string
-    format: uri
-  gameConfig:
-    $ref: ./gameconfig.v1.yaml
-  enemiesData:
+    description: Name of the map
+  size:
     type: object
-    additionalProperties:
-      type:
-        $ref: ./enemy.v1.yaml
-  turretsData:
-    type: object
-    additionalProperties:
-      type:
-        $ref: ./turret.v1.yaml
-  wavesData:
+    required:
+      - r
+      - c
+    properties:
+      r:
+        type: integer
+        description: Number of rows
+      c:
+        type: integer
+        description: Number of columns
+  path:
     type: array
+    description: Path for the enemies, a list of coordinates
     items:
-      $ref: ./wave.v1.yaml
+      type: object
+      description: Path of the enemies in the battlefield
+      properties:
+        r:
+          type: integer
+          description: Row coordinate of path point
+        c:
+          type: integer
+          description: Column coordinate of path point
+      required:
+        - r
+        - c
+  plateaus:
+    type: array
+    description: Positions that turrets are not allowed to be placed
+    items:
+      type: object
+      description: Position where a turret is not allowed
+      properties:
+        r:
+          type: integer
+          description: Row coordinate of location
+        c:
+          type: integer
+          description: Column coordinate of location
+      required:
+        - r
+        - c
 required:
+  - slug
   - name
-  - thumbnail
+  - size
+  - path
+  - plateaus

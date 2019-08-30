@@ -2,12 +2,13 @@ title: Player
 type: object
 description: This entity represents a play of a player in a tournament
 properties:
-  address:
+  id:
     type: string
+    description: Id of player
   score:
     type: integer
-    description: 'Score of player in this tournament, if already revealed'
+    description: 'Score of player in a tournament, if already revealed'
   log:
     $ref: ./log.v1.yaml
 required:
-  - address
+  - id

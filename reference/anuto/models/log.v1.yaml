@@ -1,21 +1,6 @@
 title: Log
 type: object
-description: 'Defines the log of a gameplay, all the actions the player did'
-x-examples:
-  example-1:
-    actions:
-      - type: next wave
-        tick: 107
-      - type: add turret
-        tick: 659
-        typeTurret: projectile
-        position:
-          r: 6
-          c: 3
-      - type: next wave
-        tick: 691
-      - type: next wave
-        tick: 1265
+description: 'Log of a gameplay, with all the actions the player did'
 properties:
   actions:
     type: array
@@ -26,15 +11,25 @@ properties:
           type: string
           description: Type of action
           enum:
-            - next wave
-            - add turret
+            - next_wave
+            - add_turret
+            - sell_turret
+            - upgrade_turret
+            - level_up_turret
+            - change_strategy_turret
+            - change_fixed_target_turret
         tick:
           type: integer
           description: Timestamp of action
+        id:
+          type: integer
+          description: Id of turret being changed
         typeTurret:
           type: string
+          description: Type of turret being placed
         position:
           type: object
+          description: Position of turret being placed
           properties:
             r:
               type: integer
@@ -48,3 +43,18 @@ properties:
       required:
         - type
         - tick
+x-examples:
+  example-1:
+    actions:
+      - type: next_wave
+        tick: 107
+      - type: add_turret
+        tick: 659
+        typeTurret: projectile
+        position:
+          r: 6
+          c: 3
+      - type: next_wave
+        tick: 691
+      - type: next_wave
+        tick: 1265

@@ -2,16 +2,72 @@ openapi: 3.0.0
 info:
   title: anuto
   version: '1.0'
+  description: API for Anuto TD
+  contact:
+    name: Cartesi
+    url: https://www.cartesi.io
+    email: info@cartesi.io
   license:
     name: Apache 2.0
     url: 'https://github.com/cartesi-corp/anuto-server/blob/develop/LICENSE'
 servers:
   - url: 'http://localhost:3000'
+tags:
+  - name: Map
+  - name: Tournament
+  - name: Tournament Player
 paths:
+  /maps/{slug}:
+    parameters:
+      - in: path
+        name: slug
+        description: Slug of the map
+        schema:
+          type: string
+        required: true
+    get:
+      summary: Map Definition
+      description: Gets a map definition, represented by the enemies path and allowed turret locations
+      operationId: getMapBySlug
+      tags:
+        - Map
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ./models/map.v1.yaml
+              examples:
+                original:
+                  summary: "The Original"
+                  value:
+                    $ref: './examples/map_original.json'
+                waiting_line:
+                  summary: "I hate waiting lines"
+                  value:
+                    $ref: './examples/map_waiting_line.json'
+                turn_round:
+                  summary: "Turn a round"
+                  value:
+                    $ref: './examples/map_turn_round.json'
+                hurry:
+                  summary: "We're in a hurry!"
+                  value:
+                    $ref: './examples/map_hurry.json'
+                civyshk_yard:
+                  summary: "Civyshk Yard"
+                  value:
+                    $ref: './examples/map_civyshk_yard.json'
+        '404':
+          description: Not Found
   /tournaments:
     get:
       summary: List of Tournaments
-      tags: []
+      description: Gets a list of all tournaments, which can be filtered using query parameters
+      operationId: getTournaments
+      tags:
+        - Tournament
       responses:
         '200':
           description: OK
@@ -21,53 +77,48 @@ paths:
                 type: array
                 items:
                   $ref: ./models/tournament.v1.yaml
-              examples: {}
+              examples:
+                example-1:
+                  value:
+                    $ref: './examples/tournaments.json'
       parameters:
-        - schema:
+        - in: query
+          name: phase
+          description: Filter tournaments by phase
+          schema:
             type: string
             enum:
               - commit
               - reveal
               - round
-          in: query
-          name: phase
-          description: Filter tournaments by phase
-        - schema:
+              - end
+        - in: query
+          name: me
+          description: Filter tournaments which I am participating
+          schema:
+            type: boolean
+        - in: query
+          name: sort
+          description: Order of returned tournaments
+          schema:
             type: string
             enum:
               - playerCount
               - deadline
-          in: query
-          name: sort
-          description: Order of returned tournaments
-  '/maps/{name}':
+  /tournaments/{id}:
     parameters:
-      name: id
-      in: path
-      required: true
-      type: string
-    get:
-      summary: Map Definition
-      tags: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: ./models/map.v1.yaml
-        '404':
-          description: Not Found
-      description: Get the definition of a map
-  '/tournaments/{address}':
-    parameters:
-      name: id
-      in: path
-      required: true
-      type: string
+      - in: path
+        name: id
+        description: Id of the tournament
+        schema:
+          type: string
+        required: true
     get:
       summary: Tournament Definition
-      tags: []
+      description: Gets a tournament definition and its current status
+      operationId: getTournamentById
+      tags:
+        - Tournament
       responses:
         '200':
           description: OK
@@ -75,17 +126,39 @@ paths:
             application/json:
               schema:
                 $ref: ./models/tournament.v1.yaml
+              examples:
+                commit:
+                  summary: Tournament in commit phase
+                  value:
+                    $ref: ./examples/tournament_commit.json
+                reveal:
+                  summary: Tournament in reveal phase
+                  value:
+                    $ref: ./examples/tournament_reveal.json
+                round:
+                  summary: Tournament in round phase
+                  value:
+                    $ref: ./examples/tournament_round.json
+                end:
+                  summary: Tournament in end phase
+                  value:
+                    $ref: ./examples/tournament_end.json
         '404':
           description: Not Found
-  '/tournaments/{address}/players':
+  /tournaments/{id}/players:
     parameters:
-      name: address
-      in: path
-      required: true
-      type: string
+      - in: path
+        name: id
+        description: Id of the tournament
+        required: true
+        schema:
+          type: string
     get:
       summary: Players List
-      tags: []
+      description: List of players who are playing a tournament
+      operationId: getTournamentPlayers
+      tags:
+        - Tournament Player
       responses:
         '200':
           description: OK
@@ -95,18 +168,51 @@ paths:
                 type: array
                 items:
                   $ref: ./models/player.v1.yaml
+              example:
+                - id: "1"
+                  score: 3981
+                - id: "2"
+                  score: 5039
+                - id: "3"
+                  score: 30291
+                - id: "4"
+                  score: 2353
+                - id: "5"
+                  score: 192
+                - id: "6"
+                  score: 10928
+                - id: "7"
+                  score: 9242
+                - id: "8"
+                  score: 12991
+                - id: "9"
+                  score: 8103
+                - id: "10"
+                  score: 9582
+                - id: "11"
+                  score: 13910
         '404':
           description: Not Found
-      description: List of players who are playing a tournament
-  '/tournaments/{tournament_address}/players/{player_address}':
+  /tournaments/{tournament_id}/players/{player_id}:
     parameters:
-      name: player_address
-      in: path
-      required: true
-      type: string
+      - in: path
+        name: tournament_id
+        description: Id of the tournament
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: player_id
+        description: Id of the player in the tournament
+        required: true
+        schema:
+          type: string
     get:
       summary: Player
-      tags: []
+      description: Retrieve specific play of a player in a tournament
+      operationId: getTournamentPlayerById
+      tags:
+        - Tournament Player
       responses:
         '200':
           description: OK
@@ -114,21 +220,42 @@ paths:
             application/json:
               schema:
                 $ref: ./models/player.v1.yaml
+              examples:
+                p1:
+                  value:
+                    id: "1"
+                    score: 3981
+                p2:
+                  value:
+                    id: "2"
+                    score: 5039
+                p3:
+                  value:
+                    id: "3"
+                    score: 30291
+                p4:
+                  value:
+                    id: "4"
+                    score: 2353
+
         '403':
           description: Forbidden
         '404':
           description: Not Found
-      requestBody: {}
-      description: Retrieve specific play of a player in a tournament
-  '/tournaments/{tournament_address}/players/me':
+  /tournaments/{tournament_id}/players/me:
     parameters:
-      name: tournament_address
-      in: path
-      required: true
-      type: string
+      - in: path
+        name: tournament_id
+        description: Id of the tournament
+        required: true
+        schema:
+          type: string
     get:
       summary: My Play
-      tags: &ref_0 []
+      description: Retrieve my play of the tournament
+      operationId: getMyTournamentPlayer
+      tags:
+        - Tournament Player
       responses:
         '200':
           description: OK
@@ -136,24 +263,123 @@ paths:
             application/json:
               schema:
                 $ref: ./models/player.v1.yaml
-        '304':
-          description: 'Not Modified, you already have a better score'
+              example:
+                - id: "1"
+                  score: 3981
+                  log:
+                    actions:
+                    - type: add_turret
+                      tick: 0
+                      typeTurret: projectile
+                      position:
+                        r: 3
+                        c: 2
+                    - type: next_wave
+                      tick: 0
+                    - type: add_turret
+                      tick: 46
+                      typeTurret: projectile
+                      position:
+                        r: 3
+                        c: 7
+                    - type: add_turret
+                      tick: 81
+                      typeTurret: laser
+                      position:
+                        r: 3
+                        c: 6
+                    - type: next_wave
+                      tick: 114
+                    - type: add_turret
+                      tick: 312
+                      typeTurret: launch
+                      position:
+                        r: 6
+                        c: 2
+                    - type: next_wave
+                      tick: 312
+                    - type: next_wave
+                      tick: 665
+                    - type: next_wave
+                      tick: 1687
+                    - type: add_turret
+                      tick: 2547
+                      typeTurret: glue
+                      position:
+                        r: 6
+                        c: 4
+                    - type: next_wave
+                      tick: 2779
+        '404':
+          description: Not Found
+    put:
+      summary: Update My Play
+      description: Send my play to the tournament
+      operationId: updateMyTournamentPlayer
+      tags:
+        - Tournament Player
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ./models/player.v1.yaml
+              example:
+                - id: "1"
+                  score: 3981
+                  log:
+                    actions:
+                    - type: add_turret
+                      tick: 0
+                      typeTurret: projectile
+                      position:
+                        r: 3
+                        c: 2
+                    - type: next_wave
+                      tick: 0
+                    - type: add_turret
+                      tick: 46
+                      typeTurret: projectile
+                      position:
+                        r: 3
+                        c: 7
+                    - type: add_turret
+                      tick: 81
+                      typeTurret: laser
+                      position:
+                        r: 3
+                        c: 6
+                    - type: next_wave
+                      tick: 114
+                    - type: add_turret
+                      tick: 312
+                      typeTurret: launch
+                      position:
+                        r: 6
+                        c: 2
+                    - type: next_wave
+                      tick: 312
+                    - type: next_wave
+                      tick: 665
+                    - type: next_wave
+                      tick: 1687
+                    - type: add_turret
+                      tick: 2547
+                      typeTurret: glue
+                      position:
+                        r: 6
+                        c: 4
+                    - type: next_wave
+                      tick: 2779
         '403':
           description: 'Forbidden, tournament is not accepting gameplays'
         '404':
-          description: Tournament Not Found
-      description: Retrieve my play of the tournament
-    put:
-      summary: Update My Play
-      tags: *ref_0
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: ./models/player.v1.yaml
+          description: Not Found
+        '409':
+          description: 'Conflict, you already have a better score'
       requestBody:
+        description: The result of my gameplay
         content:
           application/json:
             schema:
@@ -167,7 +393,51 @@ paths:
               required:
                 - score
                 - log
-        description: The result of my gameplay
-      description: Send my play to the tournament
+            example:
+                - score: 3981
+                  log:
+                    actions:
+                    - type: add_turret
+                      tick: 0
+                      typeTurret: projectile
+                      position:
+                        r: 3
+                        c: 2
+                    - type: next_wave
+                      tick: 0
+                    - type: add_turret
+                      tick: 46
+                      typeTurret: projectile
+                      position:
+                        r: 3
+                        c: 7
+                    - type: add_turret
+                      tick: 81
+                      typeTurret: laser
+                      position:
+                        r: 3
+                        c: 6
+                    - type: next_wave
+                      tick: 114
+                    - type: add_turret
+                      tick: 312
+                      typeTurret: launch
+                      position:
+                        r: 6
+                        c: 2
+                    - type: next_wave
+                      tick: 312
+                    - type: next_wave
+                      tick: 665
+                    - type: next_wave
+                      tick: 1687
+                    - type: add_turret
+                      tick: 2547
+                      typeTurret: glue
+                      position:
+                        r: 6
+                        c: 4
+                    - type: next_wave
+                      tick: 2779
 components:
   schemas: {}
