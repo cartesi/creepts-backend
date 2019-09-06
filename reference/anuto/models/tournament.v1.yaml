@@ -105,6 +105,9 @@ properties:
   currentRound:
     type: integer
     description: Current round if the tournament is in the round phase
+  lastRound:
+    type: integer
+    description: Round in which I lost to my opponent
   currentOpponent:
     type: string
     description: Id of my opponent score in the current round
