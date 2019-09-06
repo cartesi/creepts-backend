@@ -77,9 +77,9 @@ paths:
                 type: object
                 properties:
                   offset:
-                    type: number
+                    type: integer
                   limit:
-                    type: number
+                    type: integer
                   results:
                     type: array
                     items:
@@ -95,12 +95,12 @@ paths:
           name: limit
           description: Maximum number of tournaments to return (default applies if not specified)
           schema:
-            type: number
+            type: integer
         - in: query
           name: offset
           description: Pagination offset, 10 returns 10th element up to (10+limit)th element
           schema:
-            type: number
+            type: integer
         - in: query
           name: phase
           description: Filter tournaments by phase
