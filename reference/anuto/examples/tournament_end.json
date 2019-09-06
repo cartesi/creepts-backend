@@ -444,5 +444,10 @@
     "deadline": "2019-10-18T14:00:00",
     "totalRounds": 8,
     "currentRound": 8,
-    "winner": "123"
+    "winner": "123",
+    "_links": {
+        "self": { "href": "/tournaments/123" },
+        "me": { "href": "/tournaments/players/me" },
+        "winner": { "href": "/tournaments/players/123" }
+    }
 }

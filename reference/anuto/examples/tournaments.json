@@ -445,7 +445,13 @@
             ],
             "playerCount": 16,
             "phase": "commit",
-            "deadline": "2019-10-15T14:00:00"
+            "deadline": "2019-10-15T14:00:00",
+            "_links": {
+                "self": { "href": "/tournaments/123" }
+            }
         }
-    ]
+    ],
+    "_links": {
+        "self": { "href": "/tournaments" }
+    }
 }

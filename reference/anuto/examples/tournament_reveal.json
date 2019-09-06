@@ -443,5 +443,9 @@
     "phase": "reveal",
     "deadline": "2019-10-16T14:00:00",
     "totalRounds": 8,
-    "currentRound": 0
+    "currentRound": 0,
+    "_links": {
+        "self": { "href": "/tournaments/123" },
+        "me": { "href": "/tournaments/players/me" }
+    }
 }

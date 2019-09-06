@@ -67,6 +67,9 @@ properties:
   winner:
     type: string
     description: Id of the winner player
+  _links:
+    type: object
+    $ref: '#/components/schemas/links'
 required:
   - id
   - name

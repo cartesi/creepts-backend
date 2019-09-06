@@ -84,6 +84,8 @@ paths:
                     type: array
                     items:
                       $ref: ./models/tournament.v1.yaml
+                  _links:
+                    $ref: '#/components/schemas/links'
               examples:
                 example-1:
                   value:
@@ -417,4 +419,23 @@ paths:
                     - type: next_wave
                       tick: 2779
 components:
-  schemas: {}
+  schemas:
+    links:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/link'
+        description: dictionary of links that relates to this entity
+    link:
+      type: object
+      properties:
+        href:
+          type: string
+          description: href to follow
+        name:
+          type: string
+          description: name of link
+        templated:
+          type: boolean
+          description: true if link has a dynamic variable
+      required:
+        - href

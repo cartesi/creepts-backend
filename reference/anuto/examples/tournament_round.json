@@ -444,5 +444,10 @@
     "deadline": "2019-10-17T14:00:00",
     "totalRounds": 8,
     "currentRound": 2,
-    "currentOpponent": "123"
+    "currentOpponent": "123",
+    "_links": {
+        "self": { "href": "/tournaments/123" },
+        "me": { "href": "/tournaments/players/me" },
+        "currentOpponent": { "href": "/tournaments/players/123" }
+    }
 }
