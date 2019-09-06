@@ -15,7 +15,7 @@ servers:
 tags:
   - name: Map
   - name: Tournament
-  - name: Tournament Player
+  - name: Tournament Score
 paths:
   /maps/{slug}:
     parameters:
@@ -172,7 +172,7 @@ paths:
                     $ref: ./examples/tournament_end.json
         '404':
           description: Not Found
-  /tournaments/{tournament_id}/players/{player_id}:
+  /tournaments/{tournament_id}/scores/{id}:
     parameters:
       - in: path
         name: tournament_id
@@ -181,24 +181,24 @@ paths:
         schema:
           type: string
       - in: path
-        name: player_id
-        description: Id of the player in the tournament
+        name: id
+        description: Id of the score in the tournament
         required: true
         schema:
           type: string
     get:
-      summary: Player
-      description: Retrieve specific play of a player in a tournament
-      operationId: getTournamentPlayerById
+      summary: Score
+      description: Retrieve specific score of a player in a tournament
+      operationId: getTournamentScoreById
       tags:
-        - Tournament Player
+        - Tournament Score
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: ./models/player.v1.yaml
+                $ref: ./models/score.v1.yaml
               examples:
                 p1:
                   value:
@@ -221,7 +221,7 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
-  /tournaments/{tournament_id}/players/me:
+  /tournaments/{tournament_id}/scores/my:
     parameters:
       - in: path
         name: tournament_id
@@ -230,18 +230,18 @@ paths:
         schema:
           type: string
     get:
-      summary: My Play
-      description: Retrieve my play of the tournament
-      operationId: getMyTournamentPlayer
+      summary: My Score
+      description: Retrieve my score of the tournament
+      operationId: getMyTournamentScore
       tags:
-        - Tournament Player
+        - Tournament Score
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: ./models/player.v1.yaml
+                $ref: ./models/score.v1.yaml
               example:
                 - id: "1"
                   score: 3981
@@ -292,18 +292,18 @@ paths:
         '404':
           description: Not Found
     put:
-      summary: Update My Play
-      description: Send my play to the tournament
-      operationId: updateMyTournamentPlayer
+      summary: Update My Score
+      description: Send my score to the tournament
+      operationId: updateMyTournamentScore
       tags:
-        - Tournament Player
+        - Tournament Score
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: ./models/player.v1.yaml
+                $ref: ./models/score.v1.yaml
               example:
                 - id: "1"
                   score: 3981

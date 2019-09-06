@@ -1,6 +1,6 @@
 title: Log
 type: object
-description: 'Log of a gameplay, with all the actions the player did'
+description: 'Log of the gameplay, with all the actions the player did'
 properties:
   actions:
     type: array

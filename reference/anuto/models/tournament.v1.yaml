@@ -107,10 +107,10 @@ properties:
     description: Current round if the tournament is in the round phase
   currentOpponent:
     type: string
-    description: Id of my opponent player in the current round
+    description: Id of my opponent score in the current round
   winner:
     type: string
-    description: Id of the winner player
+    description: Id of the winning score
   _links:
     type: object
     $ref: '#/components/schemas/links'

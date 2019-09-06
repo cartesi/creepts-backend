@@ -490,7 +490,7 @@
     "winner": "123",
     "_links": {
         "self": { "href": "/tournaments/123" },
-        "me": { "href": "/tournaments/players/me" },
-        "winner": { "href": "/tournaments/players/123" }
+        "my": { "href": "/tournaments/scores/my" },
+        "winner": { "href": "/tournaments/scores/123" }
     }
 }

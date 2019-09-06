@@ -490,7 +490,7 @@
     "currentOpponent": "123",
     "_links": {
         "self": { "href": "/tournaments/123" },
-        "me": { "href": "/tournaments/players/me" },
-        "currentOpponent": { "href": "/tournaments/players/123" }
+        "my": { "href": "/tournaments/scores/my" },
+        "currentOpponent": { "href": "/tournaments/scores/123" }
     }
 }

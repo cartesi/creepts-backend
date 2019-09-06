@@ -489,6 +489,6 @@
     "currentRound": 0,
     "_links": {
         "self": { "href": "/tournaments/123" },
-        "me": { "href": "/tournaments/players/me" }
+        "my": { "href": "/tournaments/scores/my" }
     }
 }

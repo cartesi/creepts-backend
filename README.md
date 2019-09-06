@@ -48,7 +48,6 @@ http http://127.0.0.1:4010/maps/waiting_line?__example=waiting_line
 http http://127.0.0.1:4010/maps/hurry?__example=hurry
 http http://127.0.0.1:4010/tournaments
 http http://127.0.0.1:4010/tournaments/123
-http http://127.0.0.1:4010/tournaments/123/players
-http http://127.0.0.1:4010/tournaments/123/players/1
-http http://127.0.0.1:4010/tournaments/123/players/me
+http http://127.0.0.1:4010/tournaments/123/scores/1
+http http://127.0.0.1:4010/tournaments/123/scores/my
 </pre>
