@@ -1,0 +1,12 @@
+title: Enemy
+type: object
+properties:
+  life:
+    type: integer
+    description: Initial life of the enemy
+  speed:
+    type: number
+    description: Speed of the enemy
+  value:
+    type: integer
+    description: Reward of killing the enemy
