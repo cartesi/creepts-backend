@@ -443,5 +443,6 @@
     "phase": "round",
     "deadline": "2019-10-17T14:00:00",
     "totalRounds": 8,
-    "currentRound": 2
+    "currentRound": 2,
+    "currentOpponent": "123"
 }

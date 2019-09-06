@@ -57,8 +57,16 @@ properties:
     format: date-time
   totalRounds:
     type: integer
+    description: Total number of rounds of the rounds phase until a winner is declared
   currentRound:
     type: integer
+    description: Current round if the tournament is in the round phase
+  currentOpponent:
+    type: string
+    description: Id of my opponent player in the current round
+  winner:
+    type: string
+    description: Id of the winner player
 required:
   - id
   - name

@@ -26,7 +26,7 @@ paths:
           type: string
         required: true
     get:
-      summary: Map Definition
+      summary: Map
       description: Gets a map definition, represented by the enemies path and allowed turret locations
       operationId: getMapBySlug
       tags:
@@ -139,7 +139,7 @@ paths:
           type: string
         required: true
     get:
-      summary: Tournament Definition
+      summary: Tournament
       description: Gets a tournament definition and its current status
       operationId: getTournamentById
       tags:
@@ -168,54 +168,6 @@ paths:
                   summary: Tournament in end phase
                   value:
                     $ref: ./examples/tournament_end.json
-        '404':
-          description: Not Found
-  /tournaments/{id}/players:
-    parameters:
-      - in: path
-        name: id
-        description: Id of the tournament
-        required: true
-        schema:
-          type: string
-    get:
-      summary: Players List
-      description: List of players who are playing a tournament
-      operationId: getTournamentPlayers
-      tags:
-        - Tournament Player
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: ./models/player.v1.yaml
-              example:
-                - id: "1"
-                  score: 3981
-                - id: "2"
-                  score: 5039
-                - id: "3"
-                  score: 30291
-                - id: "4"
-                  score: 2353
-                - id: "5"
-                  score: 192
-                - id: "6"
-                  score: 10928
-                - id: "7"
-                  score: 9242
-                - id: "8"
-                  score: 12991
-                - id: "9"
-                  score: 8103
-                - id: "10"
-                  score: 9582
-                - id: "11"
-                  score: 13910
         '404':
           description: Not Found
   /tournaments/{tournament_id}/players/{player_id}:
