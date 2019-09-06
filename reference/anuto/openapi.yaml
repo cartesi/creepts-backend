@@ -64,7 +64,7 @@ paths:
   /tournaments:
     get:
       summary: List of Tournaments
-      description: Gets a list of all tournaments, which can be filtered using query parameters
+      description: Gets a paginated list of all tournaments, which can be filtered using query parameters
       operationId: getTournaments
       tags:
         - Tournament
@@ -74,14 +74,31 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: ./models/tournament.v1.yaml
+                type: object
+                properties:
+                  offset:
+                    type: number
+                  limit:
+                    type: number
+                  results:
+                    type: array
+                    items:
+                      $ref: ./models/tournament.v1.yaml
               examples:
                 example-1:
                   value:
                     $ref: './examples/tournaments.json'
       parameters:
+        - in: query
+          name: limit
+          description: Maximum number of tournaments to return (default applies if not specified)
+          schema:
+            type: number
+        - in: query
+          name: offset
+          description: Pagination offset, 10 returns 10th element up to (10+limit)th element
+          schema:
+            type: number
         - in: query
           name: phase
           description: Filter tournaments by phase
@@ -98,13 +115,21 @@ paths:
           schema:
             type: boolean
         - in: query
-          name: sort
-          description: Order of returned tournaments
+          name: sort_by
+          description: Sort criteria of returned tournaments
           schema:
             type: string
             enum:
               - playerCount
               - deadline
+        - in: query
+          name: order_by
+          description: Ascendent or descendent order of returned tournaments. Default is asc.
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
   /tournaments/{id}:
     parameters:
       - in: path
