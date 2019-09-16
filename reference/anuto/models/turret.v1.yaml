@@ -1,6 +1,0 @@
-title: Turret
-type: object
-properties:
-  price:
-    type: integer
-    description: Initial price of the basic turret

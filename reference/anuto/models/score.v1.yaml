@@ -2,13 +2,11 @@ title: Score
 type: object
 description: This entity represents a result of a gameplay by a player in a tournament
 properties:
-  id:
-    type: string
-    description: Id of score
   score:
     type: integer
-    description: 'Score of the player in the tournament, if already revealed'
+    description: Score of the player in the tournament, if already revealed
+  waves:
+    type: integer
+    description: Number of waves the player could fight
   log:
     $ref: ./log.v1.yaml
-required:
-  - id

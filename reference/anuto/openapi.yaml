@@ -13,54 +13,9 @@ info:
 servers:
   - url: 'http://localhost:3000'
 tags:
-  - name: Map
   - name: Tournament
   - name: Tournament Score
 paths:
-  /maps/{slug}:
-    parameters:
-      - in: path
-        name: slug
-        description: Slug of the map
-        schema:
-          type: string
-        required: true
-    get:
-      summary: Map
-      description: Gets a map definition, represented by the enemies path and allowed turret locations
-      operationId: getMapBySlug
-      tags:
-        - Map
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: ./models/map.v1.yaml
-              examples:
-                original:
-                  summary: "The Original"
-                  value:
-                    $ref: './examples/map_original.json'
-                waiting_line:
-                  summary: "I hate waiting lines"
-                  value:
-                    $ref: './examples/map_waiting_line.json'
-                turn_round:
-                  summary: "Turn a round"
-                  value:
-                    $ref: './examples/map_turn_round.json'
-                hurry:
-                  summary: "We're in a hurry!"
-                  value:
-                    $ref: './examples/map_hurry.json'
-                civyshk_yard:
-                  summary: "Civyshk Yard"
-                  value:
-                    $ref: './examples/map_civyshk_yard.json'
-        '404':
-          description: Not Found
   /tournaments:
     get:
       summary: List of Tournaments
@@ -84,8 +39,6 @@ paths:
                     type: array
                     items:
                       $ref: ./models/tournament.v1.yaml
-                  _links:
-                    $ref: '#/components/schemas/links'
               examples:
                 example-1:
                   value:
@@ -419,23 +372,4 @@ paths:
                     - type: next_wave
                       tick: 2779
 components:
-  schemas:
-    links:
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/link'
-        description: dictionary of links that relates to this entity
-    link:
-      type: object
-      properties:
-        href:
-          type: string
-          description: href to follow
-        name:
-          type: string
-          description: name of link
-        templated:
-          type: boolean
-          description: true if link has a dynamic variable
-      required:
-        - href
+  schemas: {}

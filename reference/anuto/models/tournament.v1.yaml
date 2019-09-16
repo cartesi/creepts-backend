@@ -5,87 +5,17 @@ properties:
     type: string
   name:
     type: string
-  game:
-    type: object
-    description: Configuration of the game used by the tournament
-    properties:
-      map:
-        $ref: ./map.v1.yaml
-      config:
-        type: object
-        description: General game configuration
-        properties:
-          timeStep:
-            type: integer
-          runningInClientSide:
-            type: boolean
-          enemySpawningDeltaTicks:
-            type: integer
-          credits:
-            type: integer
-          lifes:
-            type: integer
-      enemies:
-        type: object
-        description: Configuration of each type of enemy
-        properties:
-          soldier:
-            $ref: './enemy.v1.yaml'
-          runner:
-            $ref: './enemy.v1.yaml'
-          healer:
-            $ref: './enemy.v1.yaml'
-          blob:
-            $ref: './enemy.v1.yaml'
-          flier:
-            $ref: './enemy.v1.yaml'
-      turrets:
-        type: object
-        description: Configuration of each type of turret
-        properties:
-          projectile:
-            $ref: './turret.v1.yaml'
-          laser:
-            $ref: './turret.v1.yaml'
-          launch:
-            $ref: './turret.v1.yaml'
-          glue:
-            $ref: './turret.v1.yaml'
-      waves:
-        type: array
-        description: Configuration of the waves templates
-        items:
-          type: object
-          properties:
-            waveReward:
-              type: integer
-            extend:
-              type: integer
-            maxExtend:
-              type: integer
-            enemies:
-              type: array
-              items:
-                type: object
-                properties:
-                  type:
-                    type: string
-                    description: Type of the enemy
-                    enum:
-                      - soldier
-                      - runner
-                      - healer
-                      - blob
-                      - flier
-                  t:
-                    type: integer
-                    description: Ticks from start of wave
-    required:
-      - map
-      - config
-      - enemies
-      - turrets
-      - waves
+  map:
+    type: string
+    enum:
+      - original
+      - waiting-line
+      - turn-round
+      - hurry
+      - civyshk_yard
+      - civyshk_2y
+      - civyshk_line5
+      - civyshk_labyrinth
   playerCount:
     type: integer
     default: 0
@@ -114,12 +44,9 @@ properties:
   winner:
     type: string
     description: Id of the winning score
-  _links:
-    type: object
-    $ref: '#/components/schemas/links'
 required:
   - id
   - name
-  - game
+  - map
   - playerCount
   - phase
