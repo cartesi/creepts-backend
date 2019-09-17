@@ -7,6 +7,6 @@ properties:
     description: Score of the player in the tournament, if already revealed
   waves:
     type: integer
-    description: Number of waves the player could fight
+    description: Wave number reached before losing
   log:
     $ref: ./log.v1.yaml
