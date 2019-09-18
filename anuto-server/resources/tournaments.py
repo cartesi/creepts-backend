@@ -39,11 +39,41 @@ class Tournaments:
         #Returning mocked response
         try:
             with open("../reference/anuto/examples/tournaments.json", 'r') as sample_tour_file:
-                resp.body = sample_tour_file.read()
-                resp.status = falcon.HTTP_200
-        except:
+                tournaments_json = sample_tour_file.read()
+
+                #If no filter, return all
+                if (not req.has_param("phase")):
+                    resp.body = tournaments_json
+                    resp.status = falcon.HTTP_200
+                    return
+
+                filtered_tournaments = []
+                phase_filter = req.params["phase"].strip()
+
+                #There is a filter, filtering
+                tournaments_struct = json.loads(tournaments_json)
+
+                if ("results" not in tournaments_struct.keys()):
+                    raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no results entry")
+
+                for tour in tournaments_struct["results"]:
+                    if ("phase" not in tour.keys()):
+                        raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no phase entry in tournament: \n{}".format(json.dumps(tour)))
+                    if (tour["phase"].strip() == phase_filter):
+                        filtered_tournaments.append(tour)
+
+        except Exception as e:
+            print("An exception happened:")
+            print(e)
+            print("Traceback:")
+            print(traceback.format_exc())
             raise falcon.HTTPInternalServerError(description="Failed retrieving sample response")
 
+        #Update tournaments struct to contain only the filtered tournaments
+        tournaments_struct["results"] = filtered_tournaments
+
+        resp.body = json.dumps(tournaments_struct)
+        resp.status = falcon.HTTP_200
 
     def on_get_single(self, req, resp, tour_id):
         """
