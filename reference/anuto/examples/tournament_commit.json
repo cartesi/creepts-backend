@@ -1,8 +1,8 @@
 {
-    "id": "123",
-    "name": "The Original October Madness",
+    "id": "4",
+    "name": "The Original (September)",
     "map": "original",
-    "playerCount": 16,
+    "playerCount": 45,
     "phase": "commit",
-    "deadline": "2019-10-15T14:00:00"
+    "deadline": "2019-09-30T00:00:00"
 }

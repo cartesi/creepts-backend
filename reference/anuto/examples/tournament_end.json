@@ -1,12 +1,12 @@
 {
-    "id": "123",
-    "name": "The Original October Madness",
+    "id": "1",
+    "name": "The Original (July)",
     "map": "original",
-    "playerCount": 135,
+    "playerCount": 114,
     "phase": "end",
-    "deadline": "2019-10-18T14:00:00",
-    "totalRounds": 8,
-    "currentRound": 8,
+    "currentRound": 7,
+    "totalRounds": 7,
     "lastRound": 2,
-    "winner": "123"
+    "winner": "0xba4ff7070fb59d83aab639c8833bb7c39e4c1e40",
+    "deadline": "2019-07-31T00:00:00"
 }

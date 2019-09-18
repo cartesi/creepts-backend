@@ -1,11 +1,11 @@
 {
-    "id": "123",
-    "name": "The Original October Madness",
+    "id": "2",
+    "name": "The Original (August)",
     "map": "original",
-    "playerCount": 135,
+    "playerCount": 240,
     "phase": "round",
-    "deadline": "2019-10-17T14:00:00",
+    "currentRound": 5,
     "totalRounds": 8,
-    "currentRound": 2,
-    "currentOpponent": "123"
+    "currentOpponent": "0xe7b54494ef9c1d25448a6fc8e58e47713817755b",
+    "deadline": "2019-09-25T00:00:00"
 }

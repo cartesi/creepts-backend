@@ -1,10 +1,8 @@
 {
-    "id": "123",
-    "name": "The Original October Madness",
-    "map": "original",
-    "playerCount": 135,
+    "id": "3",
+    "name": "I hate waiting lines (August)",
+    "map": "waiting-line",
+    "playerCount": 167,
     "phase": "reveal",
-    "deadline": "2019-10-16T14:00:00",
-    "totalRounds": 8,
-    "currentRound": 0
+    "deadline": "2019-09-30T00:00:00"
 }
