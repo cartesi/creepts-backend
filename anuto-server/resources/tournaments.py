@@ -38,7 +38,7 @@ class Tournaments:
 
         #Returning mocked response
         try:
-            with open("../reference/anuto/examples/tournaments.json", 'r') as sample_tour_file:
+            with open("../reference/anuto/examples/tournaments.json", 'r', encoding="utf8") as sample_tour_file:
                 tournaments_json = sample_tour_file.read()
 
                 #If no filter, return all
@@ -101,7 +101,7 @@ class Tournaments:
 
         #Returning mocked response
         try:
-            with open("../reference/anuto/examples/tournaments.json", 'r') as sample_tour_file:
+            with open("../reference/anuto/examples/tournaments.json", 'r', encoding="utf8") as sample_tour_file:
                 tournaments_json = sample_tour_file.read()
                 tournaments_struct = json.loads(tournaments_json)
 
