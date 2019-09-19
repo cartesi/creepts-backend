@@ -7,5 +7,15 @@
     "currentRound": 5,
     "totalRounds": 8,
     "currentOpponent": "0xe7b54494ef9c1d25448a6fc8e58e47713817755b",
-    "deadline": "2019-09-02T00:00:00"
+    "deadline": "2019-09-02T00:00:00",
+    "scores": {
+        "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
+            "score": 76865,
+            "waves": 34
+        },
+        "0xe7b54494ef9c1d25448a6fc8e58e47713817755b": {
+            "score": 123499,
+            "waves": 52
+        }
+    }
 }

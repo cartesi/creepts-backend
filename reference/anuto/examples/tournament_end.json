@@ -8,5 +8,15 @@
     "totalRounds": 7,
     "lastRound": 2,
     "winner": "0xba4ff7070fb59d83aab639c8833bb7c39e4c1e40",
-    "deadline": "2019-07-31T00:00:00"
+    "deadline": "2019-07-31T00:00:00",
+    "scores": {
+        "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
+            "score": 76865,
+            "waves": 34
+        },
+        "0xba4ff7070fb59d83aab639c8833bb7c39e4c1e40": {
+            "score": 123499,
+            "waves": 52
+        }
+    }
 }

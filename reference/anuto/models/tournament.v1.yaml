@@ -44,6 +44,11 @@ properties:
   winner:
     type: string
     description: Id of the winning score
+  scores:
+    type: object
+    description: Scores of all players, indexed by id. This will never include the score log. To get the log you need to use the score endpoint.
+    additionalProperties:
+      $ref: "./score.v1.yaml"
 required:
   - id
   - name
