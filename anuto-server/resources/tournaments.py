@@ -1,6 +1,10 @@
 import falcon
 import json
 import traceback
+import sys
+import sys
+sys.path.insert(0,'..')
+import constants as const
 
 class Tournaments:
     def on_get(self, req, resp):
@@ -42,13 +46,12 @@ class Tournaments:
                 tournaments_json = sample_tour_file.read()
 
                 #If no filter, return all
-                if (not req.has_param("phase")):
+                if ((not req.has_param("phase")) and (not req.has_param("me"))):
                     resp.body = tournaments_json
                     resp.status = falcon.HTTP_200
                     return
 
                 filtered_tournaments = []
-                phase_filter = req.params["phase"].strip()
 
                 #There is a filter, filtering
                 tournaments_struct = json.loads(tournaments_json)
@@ -57,10 +60,22 @@ class Tournaments:
                     raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no results entry")
 
                 for tour in tournaments_struct["results"]:
-                    if ("phase" not in tour.keys()):
-                        raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no phase entry in tournament: \n{}".format(json.dumps(tour)))
-                    if (tour["phase"].strip() == phase_filter):
-                        filtered_tournaments.append(tour)
+                    #If there is a phase parameter, exclude the ones not matching
+                    if req.has_param("phase"):
+                        if ("phase" not in tour.keys()):
+                            raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no phase entry in tournament: \n{}".format(json.dumps(tour)))
+                        if (tour["phase"].strip() != req.params["phase"].strip()):
+                            continue
+
+                    #if there is a me parameter, exclude the ones not matching
+                    if req.has_param("me"):
+                        #Checking there are scores
+                        if ("scores" not in tour.keys()):
+                            continue
+                        #Checking the own score is available
+                        if (const.PLAYER_OWN_ADD not in tour["scores"].keys()):
+                            continue
+                    filtered_tournaments.append(tour)
 
         except Exception as e:
             print("An exception happened:")
