@@ -69,12 +69,17 @@ class Tournaments:
 
                     #if there is a me parameter, exclude the ones not matching
                     if req.has_param("me"):
-                        #Checking there are scores
-                        if ("scores" not in tour.keys()):
-                            continue
-                        #Checking the own score is available
-                        if (const.PLAYER_OWN_ADD not in tour["scores"].keys()):
-                            continue
+                        if req.params["me"] == "true":
+                            # Checking there are scores
+                            if "scores" not in tour.keys():
+                                continue
+                            # Checking the own score is available
+                            if const.PLAYER_OWN_ADD not in tour["scores"].keys():
+                                continue
+                        elif req.params["me"] == "false":
+                            if "scores" in tour.keys() and const.PLAYER_OWN_ADD in tour["scores"].keys():
+                                continue
+
                     filtered_tournaments.append(tour)
 
         except Exception as e:
