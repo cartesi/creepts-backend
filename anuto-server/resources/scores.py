@@ -74,6 +74,7 @@ class Scores:
         req_json = req.media
         user_id = const.PLAYER_OWN_ADD
         score = req_json['score']
+        waves = req_json['waves']
         log_bytes = json.dumps(req_json['log']).encode()
 
         #Check if there is already a score and log for this tournament in db
@@ -84,13 +85,13 @@ class Scores:
             #Check if score is higher than the one stored
             if (score > previous_score):
                 #It is, store it
-                db_utils.update_log_entry(user_id, tour_id, score, log_bytes)
+                db_utils.update_log_entry(user_id, tour_id, score, waves, log_bytes)
             else:
                 #It isn't return 409
                 raise falcon.HTTPConflict(description="The given score is not higher than a previously submitted one")
         else:
             #No previous entry, store
-            db_utils.insert_log_entry(user_id, tour_id, score, log_bytes)
+            db_utils.insert_log_entry(user_id, tour_id, score, waves, log_bytes)
 
         #Echo the request payload on response
         resp.body = json.dumps(req_json)

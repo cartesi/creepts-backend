@@ -2,6 +2,7 @@ import sqlite3
 import sys
 sys.path.insert(0,'..')
 import constants as const
+import os
 
 def get_connection():
     return sqlite3.connect(const.DB_NAME)
@@ -24,10 +25,10 @@ def execute(sql_statement, statement_args=None, commit=False, fetch=False):
     return ret
 
 def create_db():
-    executei(const.CREATE_USER_LOG_TABLEi, commit=True)
+    execute(const.CREATE_USER_LOG_TABLE, commit=True)
 
-def insert_log_entry(user_id, tournament_id, score, log):
-    execute(const.INSERT_SINGLE_LOG_TABLE, (user_id, tournament_id, score, log), commit=True)
+def insert_log_entry(user_id, tournament_id, score, waves, log):
+    execute(const.INSERT_SINGLE_LOG_TABLE, (user_id, tournament_id, score, waves, log), commit=True)
 
 def select_log_entry(user_id, tournament_id):
     entry = None
@@ -38,5 +39,11 @@ def select_log_entry(user_id, tournament_id):
 
     return entry
 
-def update_log_entry(user_id, tournament_id, score, log):
-    execute(const.UPDATE_LOG_TABLE_FOR_USER_AND_TOURNAMENT, (score, log, user_id, tournament_id), commit=True)
+def update_log_entry(user_id, tournament_id, score, waves, log):
+    execute(const.UPDATE_LOG_TABLE_FOR_USER_AND_TOURNAMENT, (score, waves, log, user_id, tournament_id), commit=True)
+
+
+#Create the db and user logs table if it doesn't exist
+if (not os.path.isfile(const.DB_NAME)):
+    create_db()
+
