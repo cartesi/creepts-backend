@@ -157,18 +157,22 @@ paths:
                   value:
                     id: "1"
                     score: 3981
+                    waves: 85
                 p2:
                   value:
                     id: "2"
                     score: 5039
+                    waves: 110
                 p3:
                   value:
                     id: "3"
                     score: 30291
+                    waves: 150
                 p4:
                   value:
                     id: "4"
                     score: 2353
+                    waves: 77
 
         '403':
           description: Forbidden
@@ -196,8 +200,8 @@ paths:
               schema:
                 $ref: ./models/score.v1.yaml
               example:
-                - id: "1"
-                  score: 3981
+                - score: 3981
+                  waves: 85
                   log:
                     actions:
                     - type: add_turret
@@ -258,8 +262,8 @@ paths:
               schema:
                 $ref: ./models/score.v1.yaml
               example:
-                - id: "1"
-                  score: 3981
+                - score: 3981
+                  waves: 85
                   log:
                     actions:
                     - type: add_turret
@@ -320,13 +324,18 @@ paths:
                 score:
                   type: integer
                   description: My score
+                waves:
+                  type: integer
+                  description: Wave number reached before losing
                 log:
                   $ref: ./models/log.v1.yaml
               required:
                 - score
+                - waves
                 - log
             example:
                 - score: 3981
+                  waves: 85
                   log:
                     actions:
                     - type: add_turret
