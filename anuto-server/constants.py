@@ -1,6 +1,11 @@
+import os
+
 #PLAYER WALLET RELATED
 
 PLAYER_OWN_ADD = "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077"
+#Overwrite own player address if environment variable set
+if os.environ['CARTESI_PLAYER_ADD']:
+    PLAYER_OWN_ADD = os.environ['CARTESI_PLAYER_ADD']
 
 #DB RELATED
 
