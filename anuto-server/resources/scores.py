@@ -20,8 +20,8 @@ class Scores:
 
         resp: falcon.Response
             This object is used to issue the response to this call,
-            if no error occurs, it returns a structure describing
-            the score and log for the given tournament
+            if no error occurs, it returns a 204 if there was a score
+            and it was improved and a 201 if it is the 1st score stored
             if there is already a log with better score, it returns
             a 409 - Conflict, you already have a better score response
             if the tournament is not accepting logs, it returns
@@ -86,14 +86,13 @@ class Scores:
             if (score > previous_score):
                 #It is, store it
                 db_utils.update_log_entry(user_id, tour_id, score, waves, log_bytes)
+                resp.status = falcon.HTTP_204
             else:
                 #It isn't return 409
                 raise falcon.HTTPConflict(description="The given score is not higher than a previously submitted one")
         else:
             #No previous entry, store
             db_utils.insert_log_entry(user_id, tour_id, score, waves, log_bytes)
-
-        #Echo the request payload on response
-        resp.body = json.dumps(req_json)
-        resp.status = falcon.HTTP_200
+            resp.body = json.dumps({"title":"201 Created","description":"Score, wave number and log were created for tournament {}".format(tour_id)})
+            resp.status = falcon.HTTP_201
 
