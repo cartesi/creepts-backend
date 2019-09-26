@@ -4,6 +4,7 @@ import traceback
 import sys
 sys.path.insert(0,'..')
 import constants as const
+import utilities as utils
 import db.db_utilities as db_utils
 from IPython import embed
 
@@ -140,4 +141,73 @@ class Scores:
 
         #There isn't, return 404
         raise falcon.HTTPNotFound(description="There is no score/log/wave number for the tornament {}".format(tour_id))
+
+    def on_get(self, req, resp, tour_id, player_id):
+        """
+        Handles the get method for the score of the given player and tournment
+
+        Parameters
+        ----------
+        req : falcon.Request
+            Contains the request
+
+        resp: falcon.Response
+            This object is used to issue the response to this call,
+            if no error occurs, it returns a structure with the score,
+            reached wave number and log of actions that earned that score
+            and reached that wave number
+            if there is no score/log/wave number for the given tournament
+            id and player id, returns 404 - Not Found
+
+        tour_id : str
+            The id of the desired tournament
+
+        player_id : str
+            The id of the desired player
+
+        Returns
+        -------
+
+        NoneType
+            This method has no return
+        """
+
+        #Warning! Mocked response
+        #Check if the is a tournament with this id
+        with open("../reference/anuto/examples/tournaments.json", 'r', encoding="utf8") as sample_tour_file:
+            tournaments_json = sample_tour_file.read()
+            tournaments_struct = json.loads(tournaments_json)
+            resp_payload = {}
+
+            if ("results" not in tournaments_struct.keys()):
+                raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no results entry")
+
+            #Retrieving the desired tournament
+            found = False
+            for tour in tournaments_struct["results"]:
+                if ("id" not in tour.keys()):
+                    raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no id entry in tournament: \n{}".format(json.dumps(tour)))
+                if (tour["id"].strip() == tour_id.strip()):
+                    #Checking the tournament has a well-formed score for the given player
+                    if ("scores" not in tour.keys()):
+                        raise falcon.HTTPNotFound(description="No score found for tournament {} for a player with the provided id: {}".format(tour_id, player_id))
+                    if (player_id not in tour["scores"].keys()):
+                        raise falcon.HTTPNotFound(description="No score found for tournament {} for a player with the provided id: {}".format(tour_id, player_id))
+                    if ('score' not in tour["scores"][player_id].keys()):
+                        raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no score set for player {} for tournament {}".format(player_id, tour_id))
+                    if ('waves' not in tour["scores"][player_id].keys()):
+                        raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no waves set for player {} for tournament {}".format(player_id, tour_id))
+                    resp_payload["score"] = tour["scores"][player_id]["score"]
+                    resp_payload["waves"] = tour["scores"][player_id]["waves"]
+                    resp_payload["log"] = utils.get_game_log(tour_id, player_id)
+                    #Just for the mocked method
+                    if not resp_payload["log"]:
+                        raise falcon.HTTPNotFound(description="No score found for tournament {} for a player with the provided id: {}".format(tour_id, player_id))
+                    resp.body = json.dumps(resp_payload)
+                    resp.status = falcon.HTTP_200
+                    return
+
+        #Not found, return 404
+        raise falcon.HTTPNotFound(description="There is no tournament {}".format(tour_id))
+
 
