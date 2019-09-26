@@ -96,3 +96,48 @@ class Scores:
             resp.body = json.dumps({"title":"201 Created","description":"Score, wave number and log were created for tournament {}".format(tour_id)})
             resp.status = falcon.HTTP_201
 
+    def on_get_my(self, req, resp, tour_id):
+        """
+        Handles the get method for the own score of a given tournment
+
+        Parameters
+        ----------
+        req : falcon.Request
+            Contains the request
+
+        resp: falcon.Response
+            This object is used to issue the response to this call,
+            if no error occurs, it returns a structure with the score,
+            reached wave number and log of actions that earned that score
+            and reached that wave number
+            if there is no score/log/wave number for the given tornament
+            id, returns 404 - Not Found
+
+        tour_id : str
+            The id of the desired tournament
+
+        Returns
+        -------
+
+        NoneType
+            This method has no return
+        """
+
+        user_id = const.PLAYER_OWN_ADD
+
+        #Querying database and checking if there is already a score and log
+        #for this tournament in db
+        log_entry = db_utils.select_log_entry(user_id, tour_id)
+        if log_entry:
+            #There is, return it
+            resp_payload={}
+            resp_payload['score'] = log_entry[2]
+            resp_payload['wave'] = log_entry[3]
+            resp_payload['log'] = json.loads(log_entry[4].decode('UTF-8'))
+            resp.body = json.dumps(resp_payload)
+            resp.status = falcon.HTTP_200
+            return
+
+        #There isn't, return 404
+        raise falcon.HTTPNotFound(description="There is no score/log/wave number for the tornament {}".format(tour_id))
+
