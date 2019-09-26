@@ -255,65 +255,16 @@ paths:
       tags:
         - Tournament Score
       responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: ./models/score.v1.yaml
-              example:
-                - score: 3981
-                  waves: 85
-                  log:
-                    actions:
-                    - type: add_turret
-                      tick: 0
-                      typeTurret: projectile
-                      position:
-                        r: 3
-                        c: 2
-                    - type: next_wave
-                      tick: 0
-                    - type: add_turret
-                      tick: 46
-                      typeTurret: projectile
-                      position:
-                        r: 3
-                        c: 7
-                    - type: add_turret
-                      tick: 81
-                      typeTurret: laser
-                      position:
-                        r: 3
-                        c: 6
-                    - type: next_wave
-                      tick: 114
-                    - type: add_turret
-                      tick: 312
-                      typeTurret: launch
-                      position:
-                        r: 6
-                        c: 2
-                    - type: next_wave
-                      tick: 312
-                    - type: next_wave
-                      tick: 665
-                    - type: next_wave
-                      tick: 1687
-                    - type: add_turret
-                      tick: 2547
-                      typeTurret: glue
-                      position:
-                        r: 6
-                        c: 4
-                    - type: next_wave
-                      tick: 2779
+        '201':
+          description: Score, wave number and log were created for tournament (id)
+        '204':
+          description: No Content
         '403':
-          description: 'Forbidden, tournament is not accepting gameplays'
+          description: 'The tournament for the provided id is not in the commit phase: (tournament)'
         '404':
-          description: Not Found
+          description: 'No tournament found with the provided id: (id)'
         '409':
-          description: 'Conflict, you already have a better score'
+          description: The given score is not higher than a previously submitted one
       requestBody:
         description: The result of my gameplay
         content:
