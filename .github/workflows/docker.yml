@@ -12,15 +12,15 @@ jobs:
       - name: Build Docker image
         run: docker build . -t cartesi/anuto-server
 
-      - name: Tag GitHub Registry
-        run: docker tag cartesi/anuto-server docker.pkg.github.com/cartesi-corp/anuto-server/anuto-server:latest
-      - name: Login to GitHub Registry
-        run: docker login docker.pkg.github.com --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+      - name: Tag Docker Hub
+        run: docker tag cartesi/anuto-server cartesi/anuto-server:latest
+      - name: Login to Docker Hub
+        run: docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         env:
-          DOCKER_USERNAME: ${{ secrets.GITHUB_DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.GITHUB_DOCKER_PASSWORD }}
-      - name: Push to GitHub Registry
-        run: docker push docker.pkg.github.com/cartesi-corp/anuto-server/anuto-server:latest
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push to Docker Hub
+        run: docker push cartesi/anuto-server:latest
 
       - name: Tag AWS ECR
         run: docker tag cartesi/anuto-server 510455014572.dkr.ecr.us-east-1.amazonaws.com/anuto-server:latest
