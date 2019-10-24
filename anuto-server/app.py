@@ -1,7 +1,7 @@
 import falcon
 from falcors import CORS
-from resources.tournaments import Tournaments
-from resources.scores import Scores
+from .resources.tournaments import Tournaments
+from .resources.scores import Scores
 
 cors = CORS(
     allow_all_origins=True,

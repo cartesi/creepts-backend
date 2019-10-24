@@ -2,8 +2,7 @@ import falcon
 import json
 import traceback
 import sys
-sys.path.insert(0,'..')
-import constants as const
+from .. import constants as const
 
 class Tournaments:
     def on_get(self, req, resp):

@@ -2,11 +2,9 @@ import falcon
 import json
 import traceback
 import sys
-sys.path.insert(0,'..')
-import constants as const
-import utilities as utils
-import db.db_utilities as db_utils
-from IPython import embed
+from .. import constants as const
+from .. import utilities as utils
+from .. import db
 
 class Scores:
 
@@ -79,21 +77,21 @@ class Scores:
         log_bytes = json.dumps(req_json['log']).encode()
 
         #Check if there is already a score and log for this tournament in db
-        log_entry = db_utils.select_log_entry(user_id, tour_id)
+        log_entry = db.db_utilities.select_log_entry(user_id, tour_id)
 
         if log_entry:
             previous_score = log_entry[2]
             #Check if score is higher than the one stored
             if (score > previous_score):
                 #It is, store it
-                db_utils.update_log_entry(user_id, tour_id, score, waves, log_bytes)
+                db.db_utilities.update_log_entry(user_id, tour_id, score, waves, log_bytes)
                 resp.status = falcon.HTTP_204
             else:
                 #It isn't return 409
                 raise falcon.HTTPConflict(description="The given score is not higher than a previously submitted one")
         else:
             #No previous entry, store
-            db_utils.insert_log_entry(user_id, tour_id, score, waves, log_bytes)
+            db.db_utilities.insert_log_entry(user_id, tour_id, score, waves, log_bytes)
             resp.body = json.dumps({"title":"201 Created","description":"Score, wave number and log were created for tournament {}".format(tour_id)})
             resp.status = falcon.HTTP_201
 
@@ -128,7 +126,7 @@ class Scores:
 
         #Querying database and checking if there is already a score and log
         #for this tournament in db
-        log_entry = db_utils.select_log_entry(user_id, tour_id)
+        log_entry = db.db_utilities.select_log_entry(user_id, tour_id)
         if log_entry:
             #There is, return it
             resp_payload={}

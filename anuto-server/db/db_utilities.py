@@ -1,8 +1,7 @@
 import sqlite3
 import sys
-sys.path.insert(0,'..')
-import constants as const
 import os
+from .. import constants as const
 
 def get_connection():
     return sqlite3.connect(const.DB_NAME)
