@@ -45,7 +45,7 @@ class Scores:
 
         #WARNING! Mocked response
         #Check if the is a tournament with this id
-        with open("../reference/anuto/examples/tournaments.json", 'r', encoding="utf8") as sample_tour_file:
+        with open("./reference/anuto/examples/tournaments.json", 'r', encoding="utf8") as sample_tour_file:
             tournaments_json = sample_tour_file.read()
             tournaments_struct = json.loads(tournaments_json)
 
@@ -172,7 +172,7 @@ class Scores:
 
         #Warning! Mocked response
         #Check if the is a tournament with this id
-        with open("../reference/anuto/examples/tournaments.json", 'r', encoding="utf8") as sample_tour_file:
+        with open("./reference/anuto/examples/tournaments.json", 'r', encoding="utf8") as sample_tour_file:
             tournaments_json = sample_tour_file.read()
             tournaments_struct = json.loads(tournaments_json)
             resp_payload = {}
