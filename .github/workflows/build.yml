@@ -1,0 +1,12 @@
+name: Build
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '3.7'
+      - run: pip install -r requirements.txt
+      - run: python -m unittest discover creepts/tests
