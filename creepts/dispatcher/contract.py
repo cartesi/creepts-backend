@@ -35,7 +35,14 @@ class Contract:
     
     def __getitem__(self, key):
         """Returns a property of the contract by name"""
+        if key not in self.data:
+            raise KeyError("Attribute '%s' not found in contract" % (key))
+
         return self.convert_type(self.data[key])
+
+    def __contains__(self, key):
+        """Returns if a property exists in the contract"""
+        return key in self.data
 
     def get_name(self):
         """Returns the name of the contract"""

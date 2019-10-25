@@ -5,9 +5,9 @@ from creepts.dispatcher.contract import Contract
 
 TESTDATA_FILENAME = os.path.join(os.path.dirname(__file__), 'instance.json')
 
-class TestDispatcherResponse(unittest.TestCase):
+class TestDispatcherContract(unittest.TestCase):
 
-    def test_raw(self):
+    def test_instance(self):
         with open(TESTDATA_FILENAME) as json_file:
             json_data = json.load(json_file)
         
