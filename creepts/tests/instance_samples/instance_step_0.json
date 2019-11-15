@@ -1,0 +1,10 @@
+{
+    "concern": {
+        "contract_address": "0x1fd00382bed4345391e75a731d97eae7e620db58",
+        "user_address": "0x85a02af7a82dfe348d2e52cf4b711c44ce542763"
+    },
+    "index": "0x0",
+    "json_data": "{\"reveal_index\":\"0x0\",\"current_state\":\"Idle\"}",
+    "name": "DAppMock",
+    "sub_instances": []
+}

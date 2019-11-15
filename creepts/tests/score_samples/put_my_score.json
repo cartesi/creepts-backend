@@ -1,0 +1,1004 @@
+{
+    "score": 434324324324234,
+    "waves": 32,
+    "log": {
+        "actions": [
+            {
+                "type": "add turret",
+                "tick": 0,
+                "turretType": "projectile",
+                "position": {
+                    "r": 3,
+                    "c": 2
+                }
+            },
+            {
+                "type": "add turret",
+                "tick": 0,
+                "turretType": "laser",
+                "position": {
+                    "r": 3,
+                    "c": 3
+                }
+            },
+            {
+                "type": "next wave",
+                "tick": 0
+            },
+            {
+                "type": "add turret",
+                "tick": 78,
+                "turretType": "laser",
+                "position": {
+                    "r": 6,
+                    "c": 2
+                }
+            },
+            {
+                "type": "next wave",
+                "tick": 78
+            },
+            {
+                "type": "add turret",
+                "tick": 301,
+                "turretType": "laser",
+                "position": {
+                    "r": 4,
+                    "c": 5
+                }
+            },
+            {
+                "type": "next wave",
+                "tick": 309
+            },
+            {
+                "type": "add turret",
+                "tick": 457,
+                "turretType": "projectile",
+                "position": {
+                    "r": 8,
+                    "c": 4
+                }
+            },
+            {
+                "type": "add turret",
+                "tick": 558,
+                "turretType": "projectile",
+                "position": {
+                    "r": 6,
+                    "c": 4
+                }
+            },
+            {
+                "type": "add turret",
+                "tick": 671,
+                "turretType": "laser",
+                "position": {
+                    "r": 9,
+                    "c": 5
+                }
+            },
+            {
+                "type": "next wave",
+                "tick": 758
+            },
+            {
+                "type": "add turret",
+                "tick": 799,
+                "turretType": "projectile",
+                "position": {
+                    "r": 12,
+                    "c": 2
+                }
+            },
+            {
+                "type": "add turret",
+                "tick": 942,
+                "turretType": "projectile",
+                "position": {
+                    "r": 12,
+                    "c": 6
+                }
+            },
+            {
+                "type": "next wave",
+                "tick": 1251
+            },
+            {
+                "type": "next wave",
+                "tick": 1922
+            },
+            {
+                "type": "add turret",
+                "tick": 2122,
+                "turretType": "laser",
+                "position": {
+                    "r": 12,
+                    "c": 4
+                }
+            },
+            {
+                "type": "add turret",
+                "tick": 2471,
+                "turretType": "laser",
+                "position": {
+                    "r": 12,
+                    "c": 5
+                }
+            },
+            {
+                "type": "add turret",
+                "tick": 2603,
+                "turretType": "laser",
+                "position": {
+                    "r": 12,
+                    "c": 3
+                }
+            },
+            {
+                "type": "next wave",
+                "tick": 2711
+            },
+            {
+                "type": "next wave",
+                "tick": 3152
+            },
+            {
+                "type": "level up turret",
+                "tick": 3283,
+                "id": 3
+            },
+            {
+                "type": "level up turret",
+                "tick": 3292,
+                "id": 3
+            },
+            {
+                "type": "level up turret",
+                "tick": 3301,
+                "id": 3
+            },
+            {
+                "type": "level up turret",
+                "tick": 3309,
+                "id": 3
+            },
+            {
+                "type": "level up turret",
+                "tick": 3318,
+                "id": 3
+            },
+            {
+                "type": "level up turret",
+                "tick": 3326,
+                "id": 3
+            },
+            {
+                "type": "level up turret",
+                "tick": 3335,
+                "id": 3
+            },
+            {
+                "type": "level up turret",
+                "tick": 3342,
+                "id": 3
+            },
+            {
+                "type": "level up turret",
+                "tick": 3351,
+                "id": 3
+            },
+            {
+                "type": "next wave",
+                "tick": 3570
+            },
+            {
+                "type": "add turret",
+                "tick": 3676,
+                "turretType": "launch",
+                "position": {
+                    "r": 4,
+                    "c": 2
+                }
+            },
+            {
+                "type": "level up turret",
+                "tick": 3769,
+                "id": 12
+            },
+            {
+                "type": "level up turret",
+                "tick": 3777,
+                "id": 12
+            },
+            {
+                "type": "level up turret",
+                "tick": 3786,
+                "id": 12
+            },
+            {
+                "type": "level up turret",
+                "tick": 3795,
+                "id": 12
+            },
+            {
+                "type": "next wave",
+                "tick": 3869
+            },
+            {
+                "type": "next wave",
+                "tick": 3931
+            },
+            {
+                "type": "level up turret",
+                "tick": 3998,
+                "id": 12
+            },
+            {
+                "type": "level up turret",
+                "tick": 4010,
+                "id": 12
+            },
+            {
+                "type": "level up turret",
+                "tick": 4018,
+                "id": 12
+            },
+            {
+                "type": "level up turret",
+                "tick": 4027,
+                "id": 12
+            },
+            {
+                "type": "next wave",
+                "tick": 4091
+            },
+            {
+                "type": "level up turret",
+                "tick": 4297,
+                "id": 12
+            },
+            {
+                "type": "next wave",
+                "tick": 4364
+            },
+            {
+                "type": "add turret",
+                "tick": 4505,
+                "turretType": "launch",
+                "position": {
+                    "r": 4,
+                    "c": 3
+                }
+            },
+            {
+                "type": "next wave",
+                "tick": 4550
+            },
+            {
+                "type": "next wave",
+                "tick": 4615
+            },
+            {
+                "type": "next wave",
+                "tick": 4673
+            },
+            {
+                "type": "next wave",
+                "tick": 4726
+            },
+            {
+                "type": "next wave",
+                "tick": 4771
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 9
+            },
+            {
+                "type": "change fixed target turret",
+                "tick": 4966,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 7
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 7
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 7
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 7
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 7
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 7
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 7
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 7
+            },
+            {
+                "type": "level up turret",
+                "tick": 4966,
+                "id": 7
+            },
+            {
+                "type": "change fixed target turret",
+                "tick": 4966,
+                "id": 7
+            },
+            {
+                "type": "next wave",
+                "tick": 4966
+            },
+            {
+                "type": "next wave",
+                "tick": 5130
+            },
+            {
+                "type": "next wave",
+                "tick": 5176
+            },
+            {
+                "type": "next wave",
+                "tick": 5230
+            },
+            {
+                "type": "next wave",
+                "tick": 5279
+            },
+            {
+                "type": "next wave",
+                "tick": 5324
+            },
+            {
+                "type": "upgrade turret",
+                "tick": 5397,
+                "id": 13
+            },
+            {
+                "type": "next wave",
+                "tick": 5397
+            },
+            {
+                "type": "level up turret",
+                "tick": 5397,
+                "id": 13
+            },
+            {
+                "type": "level up turret",
+                "tick": 5467,
+                "id": 13
+            },
+            {
+                "type": "level up turret",
+                "tick": 5520,
+                "id": 13
+            },
+            {
+                "type": "next wave",
+                "tick": 5625
+            },
+            {
+                "type": "next wave",
+                "tick": 5668
+            },
+            {
+                "type": "level up turret",
+                "tick": 5757,
+                "id": 13
+            },
+            {
+                "type": "level up turret",
+                "tick": 5816,
+                "id": 13
+            },
+            {
+                "type": "next wave",
+                "tick": 5870
+            },
+            {
+                "type": "next wave",
+                "tick": 5923
+            },
+            {
+                "type": "next wave",
+                "tick": 5965
+            },
+            {
+                "type": "level up turret",
+                "tick": 6057,
+                "id": 13
+            },
+            {
+                "type": "next wave",
+                "tick": 6155
+            },
+            {
+                "type": "level up turret",
+                "tick": 6208,
+                "id": 13
+            },
+            {
+                "type": "next wave",
+                "tick": 6342
+            },
+            {
+                "type": "next wave",
+                "tick": 6396
+            },
+            {
+                "type": "level up turret",
+                "tick": 6447,
+                "id": 13
+            },
+            {
+                "type": "next wave",
+                "tick": 6509
+            },
+            {
+                "type": "next wave",
+                "tick": 6555
+            },
+            {
+                "type": "next wave",
+                "tick": 6612
+            },
+            {
+                "type": "level up turret",
+                "tick": 6667,
+                "id": 13
+            },
+            {
+                "type": "next wave",
+                "tick": 7058
+            },
+            {
+                "type": "upgrade turret",
+                "tick": 7120,
+                "id": 10
+            },
+            {
+                "type": "change fixed target turret",
+                "tick": 7160,
+                "id": 10
+            },
+            {
+                "type": "level up turret",
+                "tick": 7202,
+                "id": 10
+            },
+            {
+                "type": "level up turret",
+                "tick": 7212,
+                "id": 10
+            },
+            {
+                "type": "next wave",
+                "tick": 7273
+            },
+            {
+                "type": "level up turret",
+                "tick": 7360,
+                "id": 10
+            },
+            {
+                "type": "level up turret",
+                "tick": 7378,
+                "id": 10
+            },
+            {
+                "type": "next wave",
+                "tick": 7434
+            },
+            {
+                "type": "level up turret",
+                "tick": 7489,
+                "id": 10
+            },
+            {
+                "type": "next wave",
+                "tick": 7547
+            },
+            {
+                "type": "level up turret",
+                "tick": 7591,
+                "id": 10
+            },
+            {
+                "type": "level up turret",
+                "tick": 7631,
+                "id": 10
+            },
+            {
+                "type": "next wave",
+                "tick": 7729
+            },
+            {
+                "type": "level up turret",
+                "tick": 7880,
+                "id": 10
+            },
+            {
+                "type": "next wave",
+                "tick": 7960
+            },
+            {
+                "type": "level up turret",
+                "tick": 8194,
+                "id": 10
+            },
+            {
+                "type": "next wave",
+                "tick": 8820
+            },
+            {
+                "type": "next wave",
+                "tick": 9163
+            },
+            {
+                "type": "upgrade turret",
+                "tick": 9409,
+                "id": 6
+            },
+            {
+                "type": "change fixed target turret",
+                "tick": 9437,
+                "id": 6
+            },
+            {
+                "type": "level up turret",
+                "tick": 9472,
+                "id": 6
+            },
+            {
+                "type": "level up turret",
+                "tick": 9482,
+                "id": 6
+            },
+            {
+                "type": "level up turret",
+                "tick": 9489,
+                "id": 6
+            },
+            {
+                "type": "level up turret",
+                "tick": 9499,
+                "id": 6
+            },
+            {
+                "type": "level up turret",
+                "tick": 9507,
+                "id": 6
+            },
+            {
+                "type": "level up turret",
+                "tick": 9516,
+                "id": 6
+            },
+            {
+                "type": "level up turret",
+                "tick": 9524,
+                "id": 6
+            },
+            {
+                "type": "next wave",
+                "tick": 9581
+            },
+            {
+                "type": "level up turret",
+                "tick": 9665,
+                "id": 6
+            },
+            {
+                "type": "next wave",
+                "tick": 9715
+            },
+            {
+                "type": "next wave",
+                "tick": 9852
+            },
+            {
+                "type": "level up turret",
+                "tick": 9898,
+                "id": 6
+            },
+            {
+                "type": "next wave",
+                "tick": 9939
+            },
+            {
+                "type": "add turret",
+                "tick": 10334,
+                "turretType": "launch",
+                "position": {
+                    "r": 3,
+                    "c": 1
+                }
+            },
+            {
+                "type": "change fixed target turret",
+                "tick": 10456,
+                "id": 14
+            },
+            {
+                "type": "change fixed target turret",
+                "tick": 10461,
+                "id": 14
+            },
+            {
+                "type": "change fixed target turret",
+                "tick": 10487,
+                "id": 14
+            },
+            {
+                "type": "change strategy turret",
+                "tick": 10510,
+                "id": 14
+            },
+            {
+                "type": "upgrade turret",
+                "tick": 10592,
+                "id": 14
+            },
+            {
+                "type": "next wave",
+                "tick": 10641
+            },
+            {
+                "type": "next wave",
+                "tick": 10705
+            },
+            {
+                "type": "next wave",
+                "tick": 10760
+            },
+            {
+                "type": "next wave",
+                "tick": 10821
+            },
+            {
+                "type": "next wave",
+                "tick": 10882
+            },
+            {
+                "type": "add turret",
+                "tick": 11047,
+                "turretType": "launch",
+                "position": {
+                    "r": 4,
+                    "c": 4
+                }
+            },
+            {
+                "type": "upgrade turret",
+                "tick": 11140,
+                "id": 15
+            },
+            {
+                "type": "add turret",
+                "tick": 11311,
+                "turretType": "launch",
+                "position": {
+                    "r": 4,
+                    "c": 6
+                }
+            },
+            {
+                "type": "upgrade turret",
+                "tick": 11416,
+                "id": 16
+            },
+            {
+                "type": "next wave",
+                "tick": 11497
+            },
+            {
+                "type": "add turret",
+                "tick": 11677,
+                "turretType": "launch",
+                "position": {
+                    "r": 5,
+                    "c": 5
+                }
+            },
+            {
+                "type": "upgrade turret",
+                "tick": 11801,
+                "id": 17
+            },
+            {
+                "type": "level up turret",
+                "tick": 11841,
+                "id": 17
+            },
+            {
+                "type": "level up turret",
+                "tick": 11852,
+                "id": 17
+            },
+            {
+                "type": "level up turret",
+                "tick": 11862,
+                "id": 17
+            },
+            {
+                "type": "level up turret",
+                "tick": 11871,
+                "id": 17
+            },
+            {
+                "type": "level up turret",
+                "tick": 11879,
+                "id": 17
+            },
+            {
+                "type": "level up turret",
+                "tick": 11886,
+                "id": 17
+            },
+            {
+                "type": "level up turret",
+                "tick": 11894,
+                "id": 17
+            },
+            {
+                "type": "level up turret",
+                "tick": 11904,
+                "id": 17
+            },
+            {
+                "type": "next wave",
+                "tick": 12000
+            },
+            {
+                "type": "next wave",
+                "tick": 12076
+            },
+            {
+                "type": "level up turret",
+                "tick": 12130,
+                "id": 17
+            },
+            {
+                "type": "next wave",
+                "tick": 12262
+            },
+            {
+                "type": "next wave",
+                "tick": 12309
+            },
+            {
+                "type": "add turret",
+                "tick": 12555,
+                "turretType": "projectile",
+                "position": {
+                    "r": 9,
+                    "c": 4
+                }
+            },
+            {
+                "type": "upgrade turret",
+                "tick": 12701,
+                "id": 18
+            },
+            {
+                "type": "change fixed target turret",
+                "tick": 12730,
+                "id": 18
+            },
+            {
+                "type": "upgrade turret",
+                "tick": 12925,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 12925,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 12925,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 12925,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 12925,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 12925,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 12925,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 12925,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 12925,
+                "id": 9
+            },
+            {
+                "type": "level up turret",
+                "tick": 12925,
+                "id": 9
+            },
+            {
+                "type": "next wave",
+                "tick": 13269
+            },
+            {
+                "type": "next wave",
+                "tick": 13356
+            },
+            {
+                "type": "next wave",
+                "tick": 13442
+            },
+            {
+                "type": "next wave",
+                "tick": 13532
+            },
+            {
+                "type": "next wave",
+                "tick": 13580
+            },
+            {
+                "type": "next wave",
+                "tick": 13652
+            },
+            {
+                "type": "next wave",
+                "tick": 13728
+            },
+            {
+                "type": "next wave",
+                "tick": 13800
+            },
+            {
+                "type": "next wave",
+                "tick": 13862
+            },
+            {
+                "type": "next wave",
+                "tick": 13920
+            },
+            {
+                "type": "upgrade turret",
+                "tick": 13957,
+                "id": 18
+            },
+            {
+                "type": "level up turret",
+                "tick": 13957,
+                "id": 18
+            },
+            {
+                "type": "level up turret",
+                "tick": 13957,
+                "id": 18
+            },
+            {
+                "type": "level up turret",
+                "tick": 14022,
+                "id": 18
+            },
+            {
+                "type": "next wave",
+                "tick": 14078
+            },
+            {
+                "type": "level up turret",
+                "tick": 14178,
+                "id": 18
+            },
+            {
+                "type": "level up turret",
+                "tick": 14195,
+                "id": 18
+            },
+            {
+                "type": "level up turret",
+                "tick": 14212,
+                "id": 18
+            },
+            {
+                "type": "level up turret",
+                "tick": 14229,
+                "id": 18
+            },
+            {
+                "type": "next wave",
+                "tick": 14282
+            },
+            {
+                "type": "level up turret",
+                "tick": 14336,
+                "id": 18
+            },
+            {
+                "type": "level up turret",
+                "tick": 14401,
+                "id": 18
+            }
+        ]
+    }
+}
