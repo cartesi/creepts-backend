@@ -3,8 +3,8 @@ import json
 import traceback
 import sys
 from .. import constants as const
-from .. import utilities as utils
-from .. import db
+from ..utils import game_log_utils
+from ..db import db_utilities
 
 class Scores:
 
@@ -77,21 +77,21 @@ class Scores:
         log_bytes = json.dumps(req_json['log']).encode()
 
         #Check if there is already a score and log for this tournament in db
-        log_entry = db.db_utilities.select_log_entry(user_id, tour_id)
+        log_entry = db_utilities.select_log_entry(user_id, tour_id)
 
         if log_entry:
             previous_score = log_entry[2]
             #Check if score is higher than the one stored
             if (score > previous_score):
                 #It is, store it
-                db.db_utilities.update_log_entry(user_id, tour_id, score, waves, log_bytes)
+                db_utilities.update_log_entry(user_id, tour_id, score, waves, log_bytes)
                 resp.status = falcon.HTTP_204
             else:
                 #It isn't return 409
                 raise falcon.HTTPConflict(description="The given score is not higher than a previously submitted one")
         else:
             #No previous entry, store
-            db.db_utilities.insert_log_entry(user_id, tour_id, score, waves, log_bytes)
+            db_utilities.insert_log_entry(user_id, tour_id, score, waves, log_bytes)
             resp.body = json.dumps({"title":"201 Created","description":"Score, wave number and log were created for tournament {}".format(tour_id)})
             resp.status = falcon.HTTP_201
 
@@ -126,7 +126,7 @@ class Scores:
 
         #Querying database and checking if there is already a score and log
         #for this tournament in db
-        log_entry = db.db_utilities.select_log_entry(user_id, tour_id)
+        log_entry = db_utilities.select_log_entry(user_id, tour_id)
         if log_entry:
             #There is, return it
             resp_payload={}
@@ -197,7 +197,7 @@ class Scores:
                         raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no waves set for player {} for tournament {}".format(player_id, tour_id))
                     resp_payload["score"] = tour["scores"][player_id]["score"]
                     resp_payload["waves"] = tour["scores"][player_id]["waves"]
-                    resp_payload["log"] = utils.get_game_log(tour_id, player_id)
+                    resp_payload["log"] = game_log_utils.get_game_log(tour_id, player_id)
                     #Just for the mocked method
                     if not resp_payload["log"]:
                         raise falcon.HTTPNotFound(description="No score found for tournament {} for a player with the provided id: {}".format(tour_id, player_id))

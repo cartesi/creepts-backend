@@ -9,7 +9,7 @@ if 'CARTESI_PLAYER_ADD' in os.environ.keys():
 
 #DB RELATED
 
-DB_NAME = "db/anuto.db"
+DB_NAME = "creepts/db/anuto.db"
 USER_LOG_TABLE = "user_logs"
 CREATE_USER_LOG_TABLE = "CREATE TABLE {} (user_id INTEGER NOT NULL, tournament_id TEXT NOT NULL, score INTEGER NOT NULL, waves INTEGER NOT NULL, log BLOB NOT NULL);".format(USER_LOG_TABLE)
 INSERT_SINGLE_LOG_TABLE = "INSERT INTO {} ('user_id', 'tournament_id', 'score', 'waves', 'log') VALUES (?, ?, ?, ?, ?);".format(USER_LOG_TABLE)

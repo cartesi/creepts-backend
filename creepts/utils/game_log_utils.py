@@ -26,7 +26,7 @@ MOCKED_LOGS = {
     }
 }
 
-MOCKED_LOGS_DIR='mock_logs/'
+MOCKED_LOGS_DIR='creepts/tests/mock_logs/'
 
 def get_game_log(tour_id, player_id):
     if (tour_id in MOCKED_LOGS.keys()):
