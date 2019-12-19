@@ -2,11 +2,113 @@ import falcon
 import json
 import traceback
 import sys
+import requests
+import logging
+
 from .. import constants as const
-from ..utils import game_log_utils
+from ..utils import game_log_utils, hash_utils
 from ..db import db_utilities
 
+LOGGER = logging.getLogger(__name__)
+
+
 class Scores:
+
+    def on_put_commit(self, req, resp, tour_id):
+        """
+        Handles the put method for committing the own score of a given tournment
+
+        Parameters
+        ----------
+        req : falcon.Request
+            Contains the request
+
+        resp: falcon.Response
+            This object is used to issue the response to this call,
+            if no error occurs, it returns a 204 if there was a score
+            and it was committed, 412 if there was no score to commit,
+            403 if the tournament is not in the commit phase,
+            if there is no tournament with the provided id, returns 404
+
+        tour_id : str
+            The id of the desired tournament
+
+        Returns
+        -------
+
+        NoneType
+            This method has no return
+        """
+
+        '''
+        #TODO: perform the validations bellow
+        #Checking if there is the desired tournament
+            #Tournament found, checking it is in the commit phase
+                #Not in the commit phase raise exception
+                raise falcon.HTTPForbidden(description="The tournament for the provided id is not in the commit phase: \n{}".format(json.dumps(tour)))
+
+            #Tournament not found
+            raise falcon.HTTPNotFound(description="No tournament found with the provided id: {}".format(tour_id))
+        '''
+
+        #Recover score for the given tournament
+
+        #Check if there is already a score and log for this tournament in db
+        user_id = const.PLAYER_OWN_ADD
+        log_entry = db_utilities.select_log_entry(user_id, tour_id)
+
+        if log_entry:
+            game_log = log_entry[4]
+
+            #Write log to file with the tour_id as name
+            log_filename = "{}{}.json".format(LOG_FILES_OUTPUT_DIR, tour_id)
+
+            with open(log_filename, 'w') as log_file:
+                log_file.write(game_log)
+
+            #Compress and archive the log
+            packed_log_filename = hash_utils.pack_log_file(log_filename)
+
+            if not packed_log_filename:
+                raise falcon.HTTPInternalServerError(description="Error compressing and archiving game log file")
+
+            #Truncate file to the expected final size
+            success = hash_utils.truncate_file(packed_log_filename)
+
+            if not success:
+                raise falcon.HTTPInternalServerError(description="Error truncating compressed and archived game log file to correct size")
+
+            #Calculate the merkle tree root hash of it
+            calculated_hash = hash_utils.merkle_root_hash(packed_log_filename)
+
+            if not calculated_hash:
+                raise falcon.HTTPInternalServerError(description="Error calculating the merkle root hash of the compressed, archieved and truncated game log file")
+
+            #Format the post payload
+            data = {
+                "index": tour_id,
+                "payload": {
+                    "action": "commit",
+                    "params": {
+                        "hash": calculated_hash
+                    }
+                }
+            }
+
+            #Commit the game log
+            dispatcher_resp = requests.post(const.COMMIT_LOG_URL, json=json.dumps(data))
+
+            if (dispatcher_resp.status_code != 200):
+                LOGGER.error("Failed to commit gamelog for tournament id {} and game log file name {}. Response content was {}".format(tour_id, packed_log_filename, dispatcher_resp.text))
+                raise falcon.HTTPInternalServerError(description="Failed to commit the gamelog for tournament id {} and game log filename {}".format(tour_id, packed_log_filename))
+
+            #Game log correctly commited, set status code to 204 and return
+            resp.status = falcon.HTTP_204
+            return
+
+        #No score
+        raise falcon.HTTPPreconditionFailed(description="There was no saved game log for the desired tournament. Tournament id: {}".format(tour_id))
+
 
     def on_put_my(self, req, resp, tour_id):
         """
