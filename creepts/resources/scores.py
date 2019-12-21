@@ -85,13 +85,16 @@ class Scores:
                 raise falcon.HTTPInternalServerError(description="Error calculating the merkle root hash of the compressed, archieved and truncated game log file")
 
             #Format the post payload
+            payload = {
+                "action": "commit",
+                "params": {
+                    "hash": calculated_hash
+                }
+            }
             data = {
+                "Post": {
                 "index": tour_id,
-                "payload": {
-                    "action": "commit",
-                    "params": {
-                        "hash": calculated_hash
-                    }
+                "payload": json.dumps(payload)
                 }
             }
 
