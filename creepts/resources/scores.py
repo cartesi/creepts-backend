@@ -93,13 +93,13 @@ class Scores:
             }
             data = {
                 "Post": {
-                "index": tour_id,
+                "index": int(tour_id),
                 "payload": json.dumps(payload)
                 }
             }
 
             #Commit the game log
-            dispatcher_resp = requests.post(const.COMMIT_LOG_URL, json=json.dumps(data))
+            dispatcher_resp = requests.post(const.COMMIT_LOG_URL, json=data)
 
             if (dispatcher_resp.status_code != 200):
                 LOGGER.error("Failed to commit gamelog for tournament id {} and game log file name {}. Response content was {}".format(tour_id, packed_log_filename, dispatcher_resp.text))
