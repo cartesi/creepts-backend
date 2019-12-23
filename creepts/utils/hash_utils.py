@@ -1,22 +1,26 @@
 import subprocess
 import logging
+import os
 
 from .. import constants as const
 
-LOGGER = logging.getLogger(__name__)
+LOGGER = logging
 
 def merkle_root_hash(file_path, page_log2_bytes_size=const.DEFAULT_PAGE_LOG2_BYTES_SIZE, merkle_tree_log2_bytes_size=const.DEFAULT_MERKLE_TREE_LOG2_BYTES_SIZE):
 
     LOGGER.info("Calculating the merkle tree root hash for file '{}' using log2 bytes size of {} for page and {} for tree".format(file_path, page_log2_bytes_size, merkle_tree_log2_bytes_size))
 
-    cmd_line = [const.HASH_BINARY_CMD, "--input", file_path, "--page-log2-size", page_log2_bytes_size, "--tree-log2-size", merkle_tree_log2_bytes_size]
+    cmd_line = [const.HASH_BINARY_CMD, "--input={}".format(file_path), "--page-log2-size={}".format(page_log2_bytes_size), "--tree-log2-size={}".format(merkle_tree_log2_bytes_size)]
     LOGGER.debug("Executing {}".format(" ".join(cmd_line)))
     proc = None
     try:
-        proc = subprocess.Popen(cmd_line, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+        custom_env = os.environ.copy()
+        custom_env[const.HASH_ENV_VAR_NAME] = const.HASH_ENV_VAR_CONTENT
+        proc = subprocess.Popen(" ".join(cmd_line), stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
         out, err = proc.communicate()
         LOGGER.debug("\nStdout:\n{}\nStderr:\n{}".format(out.decode("utf-8"), err.decode("utf-8")))
     except Exception as e:
+        LOGGER.exception(e)
         err_msg = "Failed to calculate merkle tree root hash for file '{}'".format(file_path)
         LOGGER.error(err_msg)
         if (proc):
@@ -40,7 +44,7 @@ def pack_log_file(file_path):
     LOGGER.debug("Executing {}".format(" ".join(cmd_line)))
     proc = None
     try:
-        proc = subprocess.Popen(cmd_line, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+        proc = subprocess.Popen(cmd_line, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         out, err = proc.communicate()
         LOGGER.debug("\nStdout:\n{}\nStderr:\n{}".format(out.decode("utf-8"), err.decode("utf-8")))
     except Exception as e:
