@@ -21,8 +21,10 @@ class InstanceResource(object):
     def on_get(self, req, resp):
         #Making sure a json was sent in the request payload
         if not req.content_type:
+            LOGGER.debug("Not a JSON")
             raise falcon.HTTPBadRequest(description="Provide a valid JSON as payload for this method")
         if 'application/json' not in req.content_type:
+            LOGGER.debug("'application/json' header not set")
             raise falcon.HTTPUnsupportedMediaType(description="The payload must be sent in json format")
 
         #Getting the request payload json
@@ -37,6 +39,7 @@ class InstanceResource(object):
                 if "Instance" in req_json.keys():
                     #There is, getting it
                     instance_index = int(req_json["Instance"])
+                    LOGGER.debug("Instance index {} was requested".format(instance_index))
 
         #Return the index desired if any
         if (instance_index != None):
@@ -45,12 +48,15 @@ class InstanceResource(object):
                     #Return the desired instance
                     resp.body = json_file.read()
                     resp.status = falcon.HTTP_200
+                    LOGGER.debug("Returning json for instance {}".format(instance_index))
                     return
             else:
                 #No instance for the provided index
+                LOGGER.debug("No instances with provided index {}".format(instance_index))
                 raise falcon.HTTPNotFound(description="There are no instances with the provided index: {}".format(instance_index))
 
         #No instance index provided, return the index list
+        LOGGER.debug("Returning instances list")
         resp.body = json.dumps([i for i in range(0, TESTDATA_SIZE)])
         resp.status = falcon.HTTP_200
         return

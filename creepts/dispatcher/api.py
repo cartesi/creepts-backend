@@ -8,7 +8,9 @@ class API:
         self.url = url
 
     def get_instance_indexes(self):
-        response = requests.get(self.url)
+        headers = {'Content-type': 'application/json'}
+        response = requests.get(self.url, headers=headers)
+        # TODO: handle errors
         if (response.status_code == 200):
             return response.json()
         else:

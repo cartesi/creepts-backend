@@ -6,7 +6,7 @@
     "index": "0x0",
     "json_data": {
         "dapp_index": "0x0",
-        "current_state": "DAppRunning"
+        "current_state": "Idle"
     },
     "name": "DAppManager",
     "sub_instances": [
@@ -15,7 +15,7 @@
                 "contract_address": "0x08a05453d063970a14c18ae743ace4b008085a16",
                 "user_address": "0x760841c050d07d3f74139154284d1cd8b5afa9c6"
             },
-            "index": "0x6",
+            "index": "0x0",
             "json_data": {
                 "level": "0x0",
                 "setup_hash": "0x6af22b84b40e61517eaed9b923c109cde0fb5bc38f24cefcc4cba1df1ed6ea01",
@@ -37,10 +37,10 @@
                         "score_word_position": "0xe000000000000000",
                         "log_drive_position": "0xc000000000000000",
                         "log_drive_log_size": "0x14",
-                        "log_hash": "0xfe7a808b870492a94337d0c3682a3030029d9f479a93c2b2d162f79638850d01",
-                        "has_revealed": true,
-                        "log_available": true,
-                        "current_state": "CommitRevealDone"
+                        "log_hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                        "has_revealed": false,
+                        "log_available": false,
+                        "current_state": "CommitPhase"
                     },
                     "name": "RevealCommit",
                     "sub_instances": []

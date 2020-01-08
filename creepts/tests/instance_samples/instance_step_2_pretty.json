@@ -17,7 +17,7 @@
             },
             "index": "0x0",
             "json_data": {
-                "level": "0x0",
+                "level": "0x2",
                 "setup_hash": "0x6af22b84b40e61517eaed9b923c109cde0fb5bc38f24cefcc4cba1df1ed6ea01",
                 "final_time": "0x9184e72a000",
                 "current_state": "WaitingCommitAndReveal"

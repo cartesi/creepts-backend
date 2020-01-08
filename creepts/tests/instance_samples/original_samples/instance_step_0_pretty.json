@@ -1,0 +1,13 @@
+{
+    "concern": {
+        "contract_address": "0xdc11bf53f65bec8f451ac93d5cc90380648d6ba0",
+        "user_address": "0x760841c050d07d3f74139154284d1cd8b5afa9c6"
+    },
+    "index": "0x0",
+    "json_data": {
+        "dapp_index": "0x0",
+        "current_state": "Idle"
+    },
+    "name": "DAppManager",
+    "sub_instances": []
+}

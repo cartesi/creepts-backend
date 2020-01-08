@@ -9,7 +9,11 @@ class Contract:
         """
         self.json_obj = json_obj
         if "json_data" in json_obj:
-            self.data = json.loads(json_obj["json_data"])
+            #This conversion is not needed in the mocked data
+            if type(json_obj["json_data"]) == str:
+                self.data = json.loads(json_obj["json_data"])
+            else:
+                self.data = json_obj["json_data"]
         else:
             self.data = {}
 
@@ -27,12 +31,12 @@ class Contract:
             if value.startswith("0x") and len(value) >= 42:
                 return value
 
-            # if starts with 0x, convert to int
+            # if starts with 0x, assume its a numeric value in hexadecimal and convert to int
             if value.startswith("0x"):
-                return int(value[2:], 16)
+                return int(value, 16)
 
         return value
-    
+
     def __getitem__(self, key):
         """Returns a property of the contract by name"""
         if key not in self.data:
@@ -48,6 +52,10 @@ class Contract:
         """Returns the name of the contract"""
         return self.json_obj["name"]
 
+    def get_index(self):
+        """Returns the index of the contract instance"""
+        return self.convert_type(self.json_obj["index"])
+
     def get_contract_address(self):
         """Returns the address of the contract in the blockchain"""
         return self.json_obj["concern"]["contract_address"]
@@ -59,3 +67,4 @@ class Contract:
     name = property(get_name)
     contract_address = property(get_contract_address)
     user_address = property(get_user_address)
+    index = property(get_index)
