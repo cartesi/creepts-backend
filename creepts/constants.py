@@ -7,9 +7,20 @@ PLAYER_OWN_ADD = "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077"
 if 'CARTESI_PLAYER_ADD' in os.environ.keys():
     PLAYER_OWN_ADD = os.environ['CARTESI_PLAYER_ADD']
 
+#TEST RELATED
+
+MOCKED_SERVER = False
+#Overwrite if environment variable set
+if 'MOCKED_SERVER' in os.environ.keys():
+    MOCKED_SERVER = True
+
 #DB RELATED
 
-DB_NAME = "creepts/db/anuto.db"
+if MOCKED_SERVER:
+    DB_NAME = "creepts/tests/creepts_test.db"
+else:
+    DB_NAME = "creepts/db/creepts.db"
+
 USER_LOG_TABLE = "user_logs"
 CREATE_USER_LOG_TABLE = "CREATE TABLE {} (user_id INTEGER NOT NULL, tournament_id TEXT NOT NULL, score INTEGER NOT NULL, waves INTEGER NOT NULL, log BLOB NOT NULL);".format(USER_LOG_TABLE)
 INSERT_SINGLE_LOG_TABLE = "INSERT INTO {} ('user_id', 'tournament_id', 'score', 'waves', 'log') VALUES (?, ?, ?, ?, ?);".format(USER_LOG_TABLE)
