@@ -30,7 +30,7 @@ def merkle_root_hash(file_path, page_log2_bytes_size=const.DEFAULT_PAGE_LOG2_BYT
 
     if (proc.returncode == 0):
         #Return the calculated hash
-        return "0x{}".format(out.decode("utf-8"))
+        return "0x{}".format(out.decode("utf-8").rstrip('\n'))
 
     LOGGER.error("Failed to calculate merkle tree root hash for file '{}', processed returned non-zero code".format(file_path))
     return None
