@@ -59,18 +59,21 @@ if not calculated_hash:
     raise RuntimeError("Error calculating the merkle root hash of the compressed, archieved and truncated game log file")
 
 #Format the post payload
+payload = {
+    "action": "commit",
+    "params": {
+        "hash": calculated_hash
+    }
+}
 data = {
-    "index": tour_id,
-    "payload": {
-        "action": "commit",
-        "params": {
-            "hash": calculated_hash
-        }
+    "Post": {
+    "index": int(tour_id),
+    "payload": json.dumps(payload)
     }
 }
 
 #Commit the game log
-dispatcher_resp = requests.post(const.COMMIT_LOG_URL, json=json.dumps(data))
+dispatcher_resp = requests.post(const.COMMIT_LOG_URL, json=data)
 
 if (dispatcher_resp.status_code != 200):
     print("Failed to commit gamelog for tournament id {} and game log file name {}. Response content was {}".format(tour_id, packed_log_filename, dispatcher_resp.text))
