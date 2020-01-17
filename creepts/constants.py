@@ -1,13 +1,32 @@
 import os
 import sys
+from cobra_hdwallet import HDWallet
+from web3.auto import w3
+import logging
+
+hdWallet = HDWallet()
 
 #PLAYER WALLET RELATED
 
-if 'ACCOUNT_ADDRESS' in os.environ.keys():
+if 'MNEMONIC' in os.environ.keys():
+    # create wallet object from MNEMONIC
+    # user can define an ACCOUNT_INDEX, defaults to 0
+    wallet = hdWallet.create_hdwallet(os.environ.get("MNEMONIC"),
+        '', # no passphrase
+        int(os.getenv("ACCOUNT_INDEX", default="0")))
+
+    PLAYER_OWN_ADD = w3.toChecksumAddress(wallet['address'])
+
+elif 'ACCOUNT_ADDRESS' in os.environ.keys():
     PLAYER_OWN_ADD = os.environ['ACCOUNT_ADDRESS']
+
 else:
-    print('Must define player address in an environment variable called ACCOUNT_ADDRESS')
+    print('Must define MNEMONIC or ACCOUNT_ADDRESS for the player address')
     sys.exit(1)
+
+# TODO: logging does not work here
+# logging.info('Using account ' + PLAYER_OWN_ADD)
+print('Using account ' + PLAYER_OWN_ADD)
 
 #TEST RELATED
 
