@@ -14,8 +14,6 @@ def merkle_root_hash(file_path, page_log2_bytes_size=const.DEFAULT_PAGE_LOG2_BYT
     LOGGER.debug("Executing {}".format(" ".join(cmd_line)))
     proc = None
     try:
-        custom_env = os.environ.copy()
-        custom_env[const.HASH_ENV_VAR_NAME] = const.HASH_ENV_VAR_CONTENT
         proc = subprocess.Popen(" ".join(cmd_line), stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
         out, err = proc.communicate()
         LOGGER.debug("\nStdout:\n{}\nStderr:\n{}".format(out.decode("utf-8"), err.decode("utf-8")))
@@ -56,7 +54,8 @@ def pack_log_file(file_path):
             return None
 
     if (proc.returncode == 0):
-        #Return the packed log filename
+        #Remove original file and return the packed log filename
+        os.remove(file_path)
         return packed_log_filename
 
     LOGGER.error("Failed to compress and archive file '{}', processed returned non-zero code".format(file_path))

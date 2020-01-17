@@ -4,18 +4,21 @@ import logging.config
 from falcors import CORS
 from . import constants as const
 
+#Configuring the logging for the application
+logging.config.fileConfig(const.LOGGING_CONFIG_FILENAME)
+
+LOGGER = logging
+
 #Import mocked resources if MOCKED_SERVER is set
 if const.MOCKED_SERVER:
-    print("Importing mocked resources")
+    LOGGER.debug("Importing mocked resources")
     from .tests.mock_tournaments import Tournaments
     from .tests.mock_scores import Scores
 else:
-    print("Importing real resources")
+    LOGGER.debug("Importing real resources")
     from .resources.tournaments import Tournaments
     from .resources.scores import Scores
 
-#Configuring the logging for the application
-logging.config.fileConfig(const.LOGGING_CONFIG_FILENAME)
 
 cors = CORS(
     allow_all_origins=True,

@@ -1,4 +1,5 @@
 from enum import Enum
+import json
 
 class TournamentPhase(Enum):
     COMMIT = "commit"
@@ -20,4 +21,14 @@ class Tournament:
         self.winner = None
         self.deadline = None
         self.currentOpponent = None
-        self.scores = []
+        self.scores = {}
+
+class TournamentJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Tournament):
+            return obj.__dict__
+
+        if isinstance(obj, TournamentPhase):
+            return obj.value
+
+        return json.JSONEncoder.default(self, obj)

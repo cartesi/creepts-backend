@@ -1,6 +1,4 @@
-import falcon
 import json
-import traceback
 import sys
 import requests
 import logging

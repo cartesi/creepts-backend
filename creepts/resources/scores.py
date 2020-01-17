@@ -8,110 +8,12 @@ import logging
 from .. import constants as const
 from ..utils import game_log_utils, hash_utils
 from ..db import db_utilities
+from ..utils import tournament_recovery_utils as tru
+from ..model.tournament import TournamentPhase
 
-LOGGER = logging.getLogger(__name__)
-
+LOGGER = logging
 
 class Scores:
-
-    def on_put_commit(self, req, resp, tour_id):
-        """
-        Handles the put method for committing the own score of a given tournment
-
-        Parameters
-        ----------
-        req : falcon.Request
-            Contains the request
-
-        resp: falcon.Response
-            This object is used to issue the response to this call,
-            if no error occurs, it returns a 204 if there was a score
-            and it was committed, 412 if there was no score to commit,
-            403 if the tournament is not in the commit phase,
-            if there is no tournament with the provided id, returns 404
-
-        tour_id : str
-            The id of the desired tournament
-
-        Returns
-        -------
-
-        NoneType
-            This method has no return
-        """
-
-        '''
-        #TODO: perform the validations bellow
-        #Checking if there is the desired tournament
-            #Tournament found, checking it is in the commit phase
-                #Not in the commit phase raise exception
-                raise falcon.HTTPForbidden(description="The tournament for the provided id is not in the commit phase: \n{}".format(json.dumps(tour)))
-
-            #Tournament not found
-            raise falcon.HTTPNotFound(description="No tournament found with the provided id: {}".format(tour_id))
-        '''
-
-        #Recover score for the given tournament
-
-        #Check if there is already a score and log for this tournament in db
-        user_id = const.PLAYER_OWN_ADD
-        log_entry = db_utilities.select_log_entry(user_id, tour_id)
-
-        if log_entry:
-            game_log = log_entry[4]
-
-            #Write log to file with the tour_id as name
-            log_filename = "{}{}.json".format(LOG_FILES_OUTPUT_DIR, tour_id)
-
-            with open(log_filename, 'w') as log_file:
-                log_file.write(game_log)
-
-            #Compress and archive the log
-            packed_log_filename = hash_utils.pack_log_file(log_filename)
-
-            if not packed_log_filename:
-                raise falcon.HTTPInternalServerError(description="Error compressing and archiving game log file")
-
-            #Truncate file to the expected final size
-            success = hash_utils.truncate_file(packed_log_filename)
-
-            if not success:
-                raise falcon.HTTPInternalServerError(description="Error truncating compressed and archived game log file to correct size")
-
-            #Calculate the merkle tree root hash of it
-            calculated_hash = hash_utils.merkle_root_hash(packed_log_filename)
-
-            if not calculated_hash:
-                raise falcon.HTTPInternalServerError(description="Error calculating the merkle root hash of the compressed, archieved and truncated game log file")
-
-            #Format the post payload
-            payload = {
-                "action": "commit",
-                "params": {
-                    "hash": calculated_hash
-                }
-            }
-            data = {
-                "Post": {
-                "index": int(tour_id),
-                "payload": json.dumps(payload)
-                }
-            }
-
-            #Commit the game log
-            dispatcher_resp = requests.post(const.COMMIT_LOG_URL, json=data)
-
-            if (dispatcher_resp.status_code != 200):
-                LOGGER.error("Failed to commit gamelog for tournament id {} and game log file name {}. Response content was {}".format(tour_id, packed_log_filename, dispatcher_resp.text))
-                raise falcon.HTTPInternalServerError(description="Failed to commit the gamelog for tournament id {} and game log filename {}".format(tour_id, packed_log_filename))
-
-            #Game log correctly commited, set status code to 204 and return
-            resp.status = falcon.HTTP_204
-            return
-
-        #No score
-        raise falcon.HTTPPreconditionFailed(description="There was no saved game log for the desired tournament. Tournament id: {}".format(tour_id))
-
 
     def on_put_my(self, req, resp, tour_id):
         """
@@ -142,63 +44,86 @@ class Scores:
             This method has no return
         """
 
-        #TODO: validate the json payload
-        if not req.content_type:
-            raise falcon.HTTPBadRequest(description="Provide a valid JSON as payload for this method")
-        if 'application/json' not in req.content_type:
-            raise falcon.HTTPUnsupportedMediaType(description="The payload must be sent in json format")
+        error = None
+        try:
+            LOGGER.info("PUT score")
+            #TODO: validate the json payload
+            if not req.content_type:
+                error = falcon.HTTPBadRequest(description="Provide a valid JSON as payload for this method")
+                raise
+            if 'application/json' not in req.content_type:
+                error = falcon.HTTPUnsupportedMediaType(description="The payload must be sent in json format")
+                raise
 
-        #WARNING! Mocked response
-        #Check if the is a tournament with this id
-        with open("./reference/anuto/examples/tournaments.json", 'r', encoding="utf8") as sample_tour_file:
-            tournaments_json = sample_tour_file.read()
-            tournaments_struct = json.loads(tournaments_json)
+            #Check if the is a tournament with this id
+            tournaments_fetcher = tru.Fetcher()
 
-            if ("results" not in tournaments_struct.keys()):
-                raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no results entry")
+            tour = tournaments_fetcher.get_tournament(tour_id)
 
-            #Retrieving the desired tournament
-            found = False
-            for tour in tournaments_struct["results"]:
-                if ("id" not in tour.keys()):
-                    raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no id entry in tournament: \n{}".format(json.dumps(tour)))
-                if (tour["id"].strip() == tour_id.strip()):
-                    #Checking the tournament is in commit phase
-                    if (tour['phase'] != 'commit'):
-                        #It isn't return 403
-                        raise falcon.HTTPForbidden(description="The tournament for the provided id is not in the commit phase: \n{}".format(json.dumps(tour)))
-                    #Tournament found and in commit phase
-                    found = True
-                    break
-            if not found:
-                #Not found, return 404
-                raise falcon.HTTPNotFound(description="No tournament found with the provided id: {}".format(tour_id))
+        except Exception as e:
+            if error:
+                LOGGER.exception(error)
+                raise error
 
-        #Getting request json
-        req_json = req.media
-        user_id = const.PLAYER_OWN_ADD
-        score = req_json['score']
-        waves = req_json['waves']
-        log_bytes = json.dumps(req_json['log']).encode()
+            LOGGER.exception(e)
+            raise falcon.HTTPInternalServerError(description="Failed recovering tournament")
 
-        #Check if there is already a score and log for this tournament in db
-        log_entry = db_utilities.select_log_entry(user_id, tour_id)
+        if not tour:
+            #Not found, return 404
+            raise falcon.HTTPNotFound(description="No tournament found with the provided id: {}".format(tour_id))
 
-        if log_entry:
-            previous_score = log_entry[2]
-            #Check if score is higher than the one stored
-            if (score > previous_score):
-                #It is, store it
-                db_utilities.update_log_entry(user_id, tour_id, score, waves, log_bytes)
-                resp.status = falcon.HTTP_204
+        #Checking the tournament is in the commit phase
+        if tour.phase != TournamentPhase.COMMIT:
+            #It isn't return 403
+            phase = None
+            if tour.phase:
+                phase = tour.phase.value
+            raise falcon.HTTPForbidden(description="The tournament with id {} is not in the commit phase. Tournament phase: {}".format(tour_id, phase))
+
+        try:
+            #Getting request json
+            req_json = req.media
+            user_id = const.PLAYER_OWN_ADD
+            score = req_json['score']
+            waves = req_json['waves']
+            log_bytes = json.dumps(req_json['log']).encode()
+
+            #Check if there is already a score and log for this tournament in db
+            log_entry = db_utilities.select_log_entry(user_id, tour_id)
+
+            if log_entry:
+                previous_score = log_entry[2]
+                #Check if score is higher than the one stored
+                if (score > previous_score):
+                    #It is, store it
+                    db_utilities.update_log_entry(user_id, tour_id, score, waves, log_bytes)
+                    #Commit the log
+                    error = self._commit_log(tour_id, log_bytes)
+                    if error:
+                        raise
+                    resp.status = falcon.HTTP_204
+                else:
+                    #It isn't return 409
+                    error = falcon.HTTPConflict(description="The given score is not higher than a previously submitted one")
+                    raise
             else:
-                #It isn't return 409
-                raise falcon.HTTPConflict(description="The given score is not higher than a previously submitted one")
-        else:
-            #No previous entry, store
-            db_utilities.insert_log_entry(user_id, tour_id, score, waves, log_bytes)
-            resp.body = json.dumps({"title":"201 Created","description":"Score, wave number and log were created for tournament {}".format(tour_id)})
-            resp.status = falcon.HTTP_201
+                #No previous entry, store
+                db_utilities.insert_log_entry(user_id, tour_id, score, waves, log_bytes)
+                #Commit the log
+                error = self._commit_log(tour_id, log_bytes)
+                if error:
+                    raise
+                resp.body = json.dumps({"title":"201 Created","description":"Score, wave number and log were created for tournament {}".format(tour_id)})
+                resp.status = falcon.HTTP_201
+
+        except Exception as e:
+            if error:
+                LOGGER.exception(error)
+                raise error
+
+            LOGGER.exception(e)
+            raise falcon.HTTPInternalServerError(description="Failed saving and committing game log")
+
 
     def on_get_my(self, req, resp, tour_id):
         """
@@ -275,42 +200,60 @@ class Scores:
             This method has no return
         """
 
-        #Warning! Mocked response
-        #Check if the is a tournament with this id
-        with open("./reference/anuto/examples/tournaments.json", 'r', encoding="utf8") as sample_tour_file:
-            tournaments_json = sample_tour_file.read()
-            tournaments_struct = json.loads(tournaments_json)
-            resp_payload = {}
+        #TODO: Recover from blockchain
 
-            if ("results" not in tournaments_struct.keys()):
-                raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no results entry")
+        #Return not implemented
+        raise falcon.HTTPNotImplemented(description="Endpoint currently not implemented")
 
-            #Retrieving the desired tournament
-            found = False
-            for tour in tournaments_struct["results"]:
-                if ("id" not in tour.keys()):
-                    raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no id entry in tournament: \n{}".format(json.dumps(tour)))
-                if (tour["id"].strip() == tour_id.strip()):
-                    #Checking the tournament has a well-formed score for the given player
-                    if ("scores" not in tour.keys()):
-                        raise falcon.HTTPNotFound(description="No score found for tournament {} for a player with the provided id: {}".format(tour_id, player_id))
-                    if (player_id not in tour["scores"].keys()):
-                        raise falcon.HTTPNotFound(description="No score found for tournament {} for a player with the provided id: {}".format(tour_id, player_id))
-                    if ('score' not in tour["scores"][player_id].keys()):
-                        raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no score set for player {} for tournament {}".format(player_id, tour_id))
-                    if ('waves' not in tour["scores"][player_id].keys()):
-                        raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no waves set for player {} for tournament {}".format(player_id, tour_id))
-                    resp_payload["score"] = tour["scores"][player_id]["score"]
-                    resp_payload["waves"] = tour["scores"][player_id]["waves"]
-                    resp_payload["log"] = game_log_utils.get_game_log(tour_id, player_id)
-                    #Just for the mocked method
-                    if not resp_payload["log"]:
-                        raise falcon.HTTPNotFound(description="No score found for tournament {} for a player with the provided id: {}".format(tour_id, player_id))
-                    resp.body = json.dumps(resp_payload)
-                    resp.status = falcon.HTTP_200
-                    return
+    def _commit_log(self, tour_id, game_log):
+        #Write log to file with the tour_id as name
+        log_filename = "{}{}.json".format(const.LOG_FILES_OUTPUT_DIR, tour_id)
+        LOGGER.info("Writting log with filename %s", log_filename)
 
-        #Not found, return 404
-        raise falcon.HTTPNotFound(description="There is no tournament {}".format(tour_id))
+        with open(log_filename, 'wb') as log_file:
+            log_file.write(game_log)
 
+        #Compress and archive the log
+        packed_log_filename = hash_utils.pack_log_file(log_filename)
 
+        if not packed_log_filename:
+            LOGGER.error("Failed to pack the log file")
+            return falcon.HTTPInternalServerError(description="Error compressing and archiving game log file")
+
+        LOGGER.info("Packed log filename is %s", packed_log_filename)
+
+        #Truncate file to the expected final size
+        success = hash_utils.truncate_file(packed_log_filename)
+
+        if not success:
+            LOGGER.error("Failed to truncate log file")
+            return falcon.HTTPInternalServerError(description="Error truncating compressed and archived game log file to correct size")
+
+        #Calculate the merkle tree root hash of it
+        calculated_hash = hash_utils.merkle_root_hash(packed_log_filename)
+
+        if not calculated_hash:
+            LOGGER.error("Failed to calculate the hash of the provided file")
+            return falcon.HTTPInternalServerError(description="Error calculating the merkle root hash of the compressed, archieved and truncated game log file")
+
+        #Format the post payload
+        payload = {
+            "action": "commit",
+            "params": {
+                "hash": calculated_hash
+            }
+        }
+        data = {
+            "Post": {
+            "index": int(tour_id),
+            "payload": json.dumps(payload)
+            }
+        }
+
+        #Commit the game log
+        LOGGER.debug("Committing log to the dispatcher")
+        dispatcher_resp = requests.post(const.COMMIT_LOG_URL, json=data)
+
+        if (dispatcher_resp.status_code != 200):
+            LOGGER.error("Failed to commit gamelog for tournament id {} and game log file name {}. Response content was {}".format(tour_id, packed_log_filename, dispatcher_resp.text))
+            return falcon.HTTPInternalServerError(description="Failed to commit the gamelog for tournament id {} and game log filename {}".format(tour_id, packed_log_filename))

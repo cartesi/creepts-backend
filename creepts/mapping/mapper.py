@@ -61,7 +61,7 @@ class Mapper:
                     #TODO: remove or discover how to populate playerCount and totalRounds
                     tournament.currentRound = match_manager["current_epoch"]
                     tournament.lastRound = match_manager["last_match_epoch"]
-                    tournament.deadline = datetime.utcfromtimestamp(match_manager["last_epoch_start_time"] + match_manager["epoch_duration"])
+                    tournament.deadline = datetime.utcfromtimestamp(match_manager["last_epoch_start_time"] + match_manager["epoch_duration"]).isoformat()
 
                     #Trying to recover last opponent info
                     if len(match_manager.children) > 0 and match_manager.children[0].name == "Match":
@@ -87,11 +87,11 @@ class Mapper:
                     #Checking if it is in the commit phase
                     if reveal_commit["current_state"] == "CommitPhase":
                         tournament.phase = TournamentPhase.COMMIT
-                        tournament.deadline = datetime.utcfromtimestamp(reveal_commit["instantiated_at"] + reveal_commit["commit_duration"])
+                        tournament.deadline = datetime.utcfromtimestamp(reveal_commit["instantiated_at"] + reveal_commit["commit_duration"]).isoformat()
 
                     else:
-                        tournament_phase = TournamentPhase.REVEAL
-                        tournament.deadline = datetime.utcfromtimestamp(reveal_commit["instantiated_at"] + reveal_commit["commit_duration"] + reveal_commit["reveal_duration"])
+                        tournament.phase = TournamentPhase.REVEAL
+                        tournament.deadline = datetime.utcfromtimestamp(reveal_commit["instantiated_at"] + reveal_commit["commit_duration"] + reveal_commit["reveal_duration"]).isoformat()
 
                     #TODO: remove from or discover how to populate playerCount in the tournament class
 

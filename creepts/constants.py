@@ -1,11 +1,13 @@
 import os
+import sys
 
 #PLAYER WALLET RELATED
 
-PLAYER_OWN_ADD = "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077"
-#Overwrite own player address if environment variable set
-if 'CARTESI_PLAYER_ADD' in os.environ.keys():
-    PLAYER_OWN_ADD = os.environ['CARTESI_PLAYER_ADD']
+if 'ACCOUNT_ADDRESS' in os.environ.keys():
+    PLAYER_OWN_ADD = os.environ['ACCOUNT_ADDRESS']
+else:
+    print('Must define player address in an environment variable called ACCOUNT_ADDRESS')
+    sys.exit(1)
 
 #TEST RELATED
 
@@ -22,35 +24,39 @@ else:
     DB_NAME = "creepts/db/creepts.db"
 
 USER_LOG_TABLE = "user_logs"
-CREATE_USER_LOG_TABLE = "CREATE TABLE {} (user_id INTEGER NOT NULL, tournament_id TEXT NOT NULL, score INTEGER NOT NULL, waves INTEGER NOT NULL, log BLOB NOT NULL);".format(USER_LOG_TABLE)
+CREATE_USER_LOG_TABLE = "CREATE TABLE {} (user_id TEXT NOT NULL, tournament_id TEXT NOT NULL, score INTEGER NOT NULL, waves INTEGER NOT NULL, log BLOB NOT NULL);".format(USER_LOG_TABLE)
 INSERT_SINGLE_LOG_TABLE = "INSERT INTO {} ('user_id', 'tournament_id', 'score', 'waves', 'log') VALUES (?, ?, ?, ?, ?);".format(USER_LOG_TABLE)
-SELECT_LOG_TABLE_BY_USER_AND_TOURNAMENT = "SELECT * FROM {} WHERE user_id=? and tournament_id=?".format(USER_LOG_TABLE)
+SELECT_LOG_TABLE_FROM_USER_AND_TOURNAMENT = "SELECT * FROM {} WHERE user_id=? and tournament_id=?".format(USER_LOG_TABLE)
+BASE_SELECT_LOG_TABLE_FROM_TOURNAMENTS = "SELECT * FROM {} WHERE tournament_id in ".format(USER_LOG_TABLE) #The list is not supported by sqlite argument formatting so it is substituted in the program itself
 UPDATE_LOG_TABLE_FOR_USER_AND_TOURNAMENT = "UPDATE {} SET score=?, waves=?, log=? WHERE user_id=? and tournament_id=?".format(USER_LOG_TABLE)
 
 #GAMEPLAY LOG FILES RELATED
 
-LOG_FILES_OUTPUT_DIR = "/home/carlo/crashlabs/anuto-server/creepts/tests/logs-to-share/"
+LOG_FILES_OUTPUT_DIR = "creepts/logs-to-share/"
+if 'LOG_FILES_OUTPUT_DIR' in os.environ.keys():
+    LOG_FILES_OUTPUT_DIR = os.environ['LOG_FILES_OUTPUT_DIR']
 DEFAULT_PAGE_LOG2_BYTES_SIZE = 10
 DEFAULT_MERKLE_TREE_LOG2_BYTES_SIZE = 20
 
 #MERKLE TREE ROOT HASH CALCULATOR BINARY
-HASH_ENV_VAR_NAME = "LD_LIBRARY_PATH"
-HASH_ENV_VAR_CONTENT = "/home/carlo/crashlabs/machine-emulator/build/Linux_x86_64/lib"
-HASH_BINARY_PATH = "/home/carlo/crashlabs/machine-emulator/src/hash"
-#HASH_BINARY_CMD = "{}={} {}".format(HASH_ENV_VAR_NAME, HASH_ENV_VAR_CONTENT, HASH_BINARY_PATH)
-HASH_BINARY_CMD = HASH_BINARY_PATH
+HASH_BINARY_CMD = "cartesi-machine-hash"
+if 'HASH_BINARY_CMD' in os.environ.keys():
+    HASH_BINARY_CMD = os.environ['HASH_BINARY_CMD']
 
 #PACK LOG RELATED
-PACKED_LOG_EXT = "br.tar"
-PACKLOG_CMD = "/home/carlo/crashlabs/anuto-dapp/machine/packlog"
+PACKED_LOG_EXT = "br.cpio"
+PACKLOG_CMD = "packlog"
+if 'PACKLOG_CMD' in os.environ.keys():
+    PACKLOG_CMD = os.environ['PACKLOG_CMD']
 
 #TRUNCATE RELATED
 DEFAULT_TRUNCATE_SIZE="1m"
 TRUNCATE_BIN="truncate"
 
 #DISPATCHER RELATED
-#DISPATCHER_URL = "http://dispatcher:3001"
-DISPATCHER_URL = "http://localhost:3001"
+DISPATCHER_URL = "http://dispatcher:3001"
+if 'DISPATCHER_URL' in os.environ.keys():
+    DISPATCHER_URL = os.environ['DISPATCHER_URL']
 COMMIT_LOG_URL = DISPATCHER_URL
 
 #LOGGING RELATED
@@ -58,3 +64,6 @@ LOGGING_CONFIG_FILENAME = "creepts/logging.conf"
 
 #TOURNAMENT STATIC INFORMATION RELATED
 MAPPED_TOURNAMENT_INFO_FILENAME = "creepts/tournament_info.yaml"
+
+#TOURNAMENT RESOURCE RELATED
+TOURNAMENTS_RESPONSE_LIMIT = 100

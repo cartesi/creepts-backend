@@ -2,7 +2,14 @@ import falcon
 import json
 import traceback
 import sys
+import logging
 from .. import constants as const
+from ..utils import tournament_recovery_utils as tru
+from ..model.tournament import TournamentJSONEncoder
+
+from IPython import embed
+
+LOGGER = logging
 
 class Tournaments:
     def on_get(self, req, resp):
@@ -38,60 +45,67 @@ class Tournaments:
             This method has no return
         """
 
-        #Returning mocked response
         try:
-            with open("./reference/anuto/examples/tournaments.json", 'r', encoding="utf8") as sample_tour_file:
-                tournaments_json = sample_tour_file.read()
+            LOGGER.info("Get tournaments")
+            #Recoverign all tournaments from dispatcher
+            tournaments_fetcher = tru.Fetcher()
 
-                #If no filter, return all
-                if ((not req.has_param("phase")) and (not req.has_param("me"))):
-                    resp.body = tournaments_json
-                    resp.status = falcon.HTTP_200
-                    return
+            tournaments = tournaments_fetcher.get_all_tournaments()
 
-                filtered_tournaments = []
+            #Recovering scores from db
+            #TODO: recover other scores from blockchain, or by calculating the score by
+            #fetching the player logs in the blockchain and running them by the offline verifier
+            tournaments = tournaments_fetcher.populate_scores_from_db(tournaments)
 
+            filtered_tournaments = []
+
+            #If no filter, return all
+            if ((not req.has_param("phase")) and (not req.has_param("me"))):
+                filtered_tournaments = tournaments
+
+            else:
                 #There is a filter, filtering
-                tournaments_struct = json.loads(tournaments_json)
-
-                if ("results" not in tournaments_struct.keys()):
-                    raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no results entry")
-
-                for tour in tournaments_struct["results"]:
+                for tour in tournaments:
                     #If there is a phase parameter, exclude the ones not matching
                     if req.has_param("phase"):
-                        if ("phase" not in tour.keys()):
-                            raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no phase entry in tournament: \n{}".format(json.dumps(tour)))
-                        if (tour["phase"].strip() != req.params["phase"].strip()):
+                        if (tour.phase.strip() != req.params["phase"].strip()):
                             continue
 
                     #if there is a me parameter, exclude the ones not matching
                     if req.has_param("me"):
                         if req.params["me"] == "true":
-                            # Checking there are scores
-                            if "scores" not in tour.keys():
-                                continue
-                            # Checking the own score is available
-                            if const.PLAYER_OWN_ADD not in tour["scores"].keys():
+                            #Exclude if doesn't match
+                            if const.PLAYER_OWN_ADD not in tour.scores.keys():
                                 continue
                         elif req.params["me"] == "false":
-                            if "scores" in tour.keys() and const.PLAYER_OWN_ADD in tour["scores"].keys():
+                            #Exclude if matches
+                            if const.PLAYER_OWN_ADD in tour.scores.keys():
                                 continue
 
                     filtered_tournaments.append(tour)
 
+            #TODO: sort and order by desc/asc
+            #Build response dict with the filtered tournaments
+            resp_dict = {}
+
+            offset = 0
+            if req.has_param("offset"):
+                offset = int(req.params["offset"])
+
+            limit = const.TOURNAMENTS_RESPONSE_LIMIT
+            if req.has_param("limit"):
+                limit = int(req.params["limit"])
+
+            resp_dict["limit"] = limit
+            resp_dict["offset"] = offset
+            resp_dict["results"] = filtered_tournaments[offset:offset+limit]
+
+            resp.body = json.dumps(resp_dict, cls=TournamentJSONEncoder)
+            resp.status = falcon.HTTP_200
+
         except Exception as e:
-            print("An exception happened:")
-            print(e)
-            print("Traceback:")
-            print(traceback.format_exc())
-            raise falcon.HTTPInternalServerError(description="Failed retrieving sample response")
-
-        #Update tournaments struct to contain only the filtered tournaments
-        tournaments_struct["results"] = filtered_tournaments
-
-        resp.body = json.dumps(tournaments_struct)
-        resp.status = falcon.HTTP_200
+            LOGGER.exception(e)
+            raise falcon.HTTPInternalServerError(description="Failed retrieving tournaments")
 
     def on_get_single(self, req, resp, tour_id):
         """
@@ -117,30 +131,27 @@ class Tournaments:
             This method has no return
         """
 
-        #Returning mocked response
         try:
-            with open("./reference/anuto/examples/tournaments.json", 'r', encoding="utf8") as sample_tour_file:
-                tournaments_json = sample_tour_file.read()
-                tournaments_struct = json.loads(tournaments_json)
+            #Recoverign tournament from dispatcher, if it exists
+            tournaments_fetcher = tru.Fetcher()
 
-                if ("results" not in tournaments_struct.keys()):
-                    raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no results entry")
+            tour = tournaments_fetcher.get_tournament(tour_id)
 
-                #Retrieving the desired tournament, or 404 if not found
-                for tour in tournaments_struct["results"]:
-                    if ("id" not in tour.keys()):
-                        raise falcon.HTTPInternalServerError(description="Malformed mocked tournaments file, no id entry in tournament: \n{}".format(json.dumps(tour)))
-                    if (tour["id"].strip() == tour_id.strip()):
-                        resp.body = json.dumps(tour)
-                        resp.status = falcon.HTTP_200
-                        return
+            if tour:
+                #Found the tournament
+
+                #Recovering scores from db
+                #TODO: recover other scores from blockchain, or by calculating the score by
+                #fetching the player logs in the blockchain and running them by the offline verifier
+                tour_with_scores = tournaments_fetcher.populate_scores_from_db([tour])[0]
+
+                resp.body = json.dumps(tour_with_scores, cls=TournamentJSONEncoder)
+                resp.status = falcon.HTTP_200
+                return
 
         except Exception as e:
-            print("An exception happened:")
-            print(e)
-            print("Traceback:")
-            print(traceback.format_exc())
-            raise falcon.HTTPInternalServerError(description="Failed retrieving sample response")
+            LOGGER.exception(e)
+            raise falcon.HTTPInternalServerError(description="Failed retrieving tournament")
 
         #No matches, return 404
         raise falcon.HTTPNotFound(description="No tournament with the provided id")
