@@ -10,29 +10,26 @@ jobs:
           python-version: '3.7'
       - run: pip install -r requirements.txt
       - run: python -m unittest discover creepts/tests
+  
   build:
     runs-on: ubuntu-18.04
     needs: test
+    env:
+      TAG: latest
     steps:
       - uses: actions/checkout@v1
 
       - name: Build Docker Image
-        run: docker build . -t cartesi/anuto-server
+        run: docker build . -t cartesi/creepts-backend:${TAG}
 
-      - name: Push to AWS ECR
-        run: |
-          docker tag cartesi/anuto-server 510455014572.dkr.ecr.us-east-1.amazonaws.com/anuto-server:develop-${GITHUB_SHA:0:8}
-          $(aws ecr get-login --no-include-email --region us-east-1)
-          docker push 510455014572.dkr.ecr.us-east-1.amazonaws.com/anuto-server:develop-${GITHUB_SHA:0:8}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
+      - run: echo "::set-env name=TAG::${GITHUB_REF:11}"
+        if: startsWith(github.ref, 'refs/tags/v')
+  
       - name: Push to Docker Hub
-        if: github.ref == 'refs/branches/develop'
         run: |
           echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
-          docker push cartesi/anuto-server
+          docker push cartesi/creepts-backend:${TAG}
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        if: github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/v')
