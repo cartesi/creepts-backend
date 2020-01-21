@@ -10,26 +10,21 @@ class TournamentMappingException(Exception):
 class Mapper:
 
     def to_tournament(self, dapp):
-        #Should be DAppManager at first, when removing the test part of the dapp this
+        #Should be DApp at first, when removing the test part of the dapp this
         #first level should disappear and start from the "AnutoDapp" level
         if not dapp.name.startswith("DApp"):
             return None
 
-        #go into AnutoDApp, return None if not possible
-        if not (len(dapp.children)>0 and dapp.children[0].name.startswith("AnutoDApp")):
-            return None
-
-        anuto_dapp = dapp.children[0]
-        id = anuto_dapp.index
+        id = dapp.index
         if id == None:
             raise TournamentMappingException("Must have \"index\" field at the AnutoDApp level")
 
-        name = self._get_tournament_name(anuto_dapp)
+        name = self._get_tournament_name(dapp)
 
         if not name:
             raise TournamentMappingException("Couldn't recover name of the tournament with id {}".format(id))
 
-        map = anuto_dapp["level"]
+        map = dapp["level"]
 
         if map == None:
             raise TournamentMappingException("Couldn't recover the map of the tournament with id {}".format(id))
@@ -37,7 +32,7 @@ class Mapper:
         tournament = Tournament(id, name, map)
 
         #Checking if the tournament is done
-        if anuto_dapp["current_state"] == "DAppFinished":
+        if dapp["current_state"] == "DAppFinished":
             #It is
             tournament.phase = TournamentPhase.END
 
@@ -46,13 +41,13 @@ class Mapper:
             return tournament
 
         #Checking if tournament is in the round phase and trying to get MatchManager
-        elif anuto_dapp["current_state"] == "WaitingMatches":
+        elif dapp["current_state"] == "WaitingMatches":
 
             #It's in the round phase
             tournament.phase = TournamentPhase.ROUND
 
             # Get MatchManager if any:
-            for child in anuto_dapp.children:
+            for child in dapp.children:
                 if child.name == "MatchManager":
 
                     match_manager = child
@@ -76,10 +71,10 @@ class Mapper:
                     return tournament
 
         #Checking if tournament is in the commit or reveal phases
-        elif anuto_dapp["current_state"] == "WaitingCommitAndReveal":
+        elif dapp["current_state"] == "WaitingCommitAndReveal":
 
             #Recover commit/reveal manager if any:
-            for child in anuto_dapp.children:
+            for child in dapp.children:
                 if child.name == "RevealCommit":
 
                     reveal_commit = child
