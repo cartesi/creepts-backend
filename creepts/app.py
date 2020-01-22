@@ -18,7 +18,7 @@ else:
     LOGGER.debug("Importing real resources")
     from .resources.tournaments import Tournaments
     from .resources.scores import Scores
-
+from .resources.player import Player
 
 cors = CORS(
     allow_all_origins=True,
@@ -30,3 +30,4 @@ api.add_route('/api/tournaments', Tournaments())
 api.add_route('/api/tournaments/{tour_id}', Tournaments(), suffix='single')
 api.add_route('/api/tournaments/{tour_id}/scores/my', Scores(), suffix='my')
 api.add_route('/api/tournaments/{tour_id}/scores/{player_id}', Scores())
+api.add_route('/api/me', Player())
