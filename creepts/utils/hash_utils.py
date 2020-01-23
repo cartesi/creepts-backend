@@ -48,6 +48,7 @@ def pack_log_file(file_path):
     except Exception as e:
         err_msg = "Failed to compact and archive file '{}'".format(file_path)
         LOGGER.error(err_msg)
+        LOGGER.exception(e)
         if (proc):
             out, err = proc.communicate()
             LOGGER.debug("\nStdout:\n{}\nStderr:\n{}".format(out.decode("utf-8"), err.decode("utf-8")))
@@ -75,6 +76,7 @@ def truncate_file(file_path, size=const.DEFAULT_TRUNCATE_SIZE):
     except Exception as e:
         err_msg = "Failed to truncate file '{}'".format(file_path)
         LOGGER.error(err_msg)
+        LOGGER.exception(e)
         if (proc):
             out, err = proc.communicate()
             LOGGER.debug("\nStdout:\n{}\nStderr:\n{}".format(out.decode("utf-8"), err.decode("utf-8")))
