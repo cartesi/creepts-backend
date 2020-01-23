@@ -7,7 +7,7 @@ from creepts.dispatcher.contract import Contract
 from creepts.mapping.mapper import Mapper
 from creepts.model.tournament import TournamentPhase
 
-TESTDATA_FILENAME = os.path.join(os.path.dirname(__file__), 'instance_samples/instance_step_11_pretty.json')
+TESTDATA_FILENAME = os.path.join(os.path.dirname(__file__), 'instance_samples/instance_step_7.json')
 
 class TestMapper(unittest.TestCase):
 
@@ -20,12 +20,14 @@ class TestMapper(unittest.TestCase):
         dapp = Contract(json_data)
         tournament = mapper.to_tournament(dapp)
 
-        self.assertEqual(tournament.id, 11)
+        self.assertEqual(tournament.id, 7)
         self.assertEqual(tournament.phase, TournamentPhase.ROUND)
-        self.assertEqual(tournament.currentRound, 1)
+        self.assertEqual(tournament.currentRound, 0)
         self.assertEqual(tournament.lastRound, 0)
-        self.assertEqual(tournament.deadline, '2019-12-26T21:49:37')
-        # self.assertEqual(tournament.currentOpponent, None)
+        self.assertEqual(tournament.deadline, '2020-01-21T22:56:09+00:00')
+        self.assertEqual(tournament.map, 'original')
+        self.assertEqual(tournament.name, 'saturday one')
+        self.assertEqual(tournament.currentOpponent, None)
         self.assertEqual(tournament.winner, None)
 
 if __name__ == '__main__':

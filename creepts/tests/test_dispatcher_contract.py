@@ -10,7 +10,7 @@ class TestDispatcherContract(unittest.TestCase):
     def test_instance(self):
         with open(TESTDATA_FILENAME) as json_file:
             json_data = json.load(json_file)
-        
+
         dapp = Contract(json_data)
         self.assertEqual(dapp.name, "DAppMock")
         self.assertEqual(dapp.contract_address, "0x59d956d5eeb2f7d93453ce028d1d4a0bee46543a")
