@@ -24,7 +24,7 @@ def merkle_root_hash(file_path, page_log2_bytes_size=const.DEFAULT_PAGE_LOG2_BYT
         if (proc):
             out, err = proc.communicate()
             LOGGER.debug("\nStdout:\n{}\nStderr:\n{}".format(out.decode("utf-8"), err.decode("utf-8")))
-            return None
+        return None
 
     if (proc.returncode == 0):
         #Return the calculated hash
@@ -51,7 +51,7 @@ def pack_log_file(file_path):
         if (proc):
             out, err = proc.communicate()
             LOGGER.debug("\nStdout:\n{}\nStderr:\n{}".format(out.decode("utf-8"), err.decode("utf-8")))
-            return None
+        return None
 
     if (proc.returncode == 0):
         #Remove original file and return the packed log filename
@@ -78,7 +78,7 @@ def truncate_file(file_path, size=const.DEFAULT_TRUNCATE_SIZE):
         if (proc):
             out, err = proc.communicate()
             LOGGER.debug("\nStdout:\n{}\nStderr:\n{}".format(out.decode("utf-8"), err.decode("utf-8")))
-            return None
+        return None
 
     if (proc.returncode == 0):
         #Return true

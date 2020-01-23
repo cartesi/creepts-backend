@@ -1,6 +1,6 @@
 import yaml
 
-from datetime import datetime
+from datetime import datetime, timezone
 from creepts.model.tournament import Tournament, TournamentPhase
 import creepts.constants as const
 
@@ -24,7 +24,7 @@ class Mapper:
         if not name:
             raise TournamentMappingException("Couldn't recover name of the tournament with id {}".format(id))
 
-        map = dapp["level"]
+        map = self._get_map_name(dapp)
 
         if map == None:
             raise TournamentMappingException("Couldn't recover the map of the tournament with id {}".format(id))
@@ -56,7 +56,7 @@ class Mapper:
                     #TODO: remove or discover how to populate playerCount and totalRounds
                     tournament.currentRound = match_manager["current_epoch"]
                     tournament.lastRound = match_manager["last_match_epoch"]
-                    tournament.deadline = datetime.utcfromtimestamp(match_manager["last_epoch_start_time"] + match_manager["epoch_duration"]).isoformat()
+                    tournament.deadline = datetime.fromtimestamp(match_manager["last_epoch_start_time"] + match_manager["epoch_duration"], timezone.utc).isoformat()
 
                     #Trying to recover last opponent info
                     if len(match_manager.children) > 0 and match_manager.children[0].name == "Match":
@@ -82,11 +82,11 @@ class Mapper:
                     #Checking if it is in the commit phase
                     if reveal_commit["current_state"] == "CommitPhase":
                         tournament.phase = TournamentPhase.COMMIT
-                        tournament.deadline = datetime.utcfromtimestamp(reveal_commit["instantiated_at"] + reveal_commit["commit_duration"]).isoformat()
+                        tournament.deadline = datetime.fromtimestamp(reveal_commit["instantiated_at"] + reveal_commit["commit_duration"], timezone.utc).isoformat()
 
                     else:
                         tournament.phase = TournamentPhase.REVEAL
-                        tournament.deadline = datetime.utcfromtimestamp(reveal_commit["instantiated_at"] + reveal_commit["commit_duration"] + reveal_commit["reveal_duration"]).isoformat()
+                        tournament.deadline = datetime.fromtimestamp(reveal_commit["instantiated_at"] + reveal_commit["commit_duration"] + reveal_commit["reveal_duration"], timezone.utc).isoformat()
 
                     #TODO: remove from or discover how to populate playerCount in the tournament class
 
@@ -105,3 +105,18 @@ class Mapper:
                     name = tour_info[id]["name"]
 
         return name
+
+    def _get_map_name(self, dapp):
+        name = None
+        #Loading yaml with the mapped information
+        with open(const.MAPPED_MAP_INFO_FILENAME) as map_info_file:
+            map_info = yaml.full_load(map_info_file)
+            if 'level' in dapp.data.keys():
+                lvl = dapp['level']
+
+                if lvl in map_info.keys():
+                    if "name" in map_info[lvl].keys():
+                        name = map_info[lvl]["name"]
+
+        return name
+

@@ -5,9 +5,7 @@ import sys
 import logging
 from .. import constants as const
 from ..utils import tournament_recovery_utils as tru
-from ..model.tournament import TournamentJSONEncoder
-
-from IPython import embed
+from ..model.tournament import TournamentJSONEncoder, TournamentPhase
 
 LOGGER = logging
 
@@ -45,6 +43,12 @@ class Tournaments:
             This method has no return
         """
 
+        #If a phase filter was provided, checking it has a valid value
+        if req.has_param("phase"):
+            valid_values = [phase.value for phase in TournamentPhase]
+            if (req.params["phase"] not in valid_values):
+                raise falcon.HTTPBadRequest(description="Invalid phase filter provided, valid values are {}".format(valid_values))
+
         try:
             LOGGER.info("Get tournaments")
             #Recoverign all tournaments from dispatcher
@@ -68,7 +72,7 @@ class Tournaments:
                 for tour in tournaments:
                     #If there is a phase parameter, exclude the ones not matching
                     if req.has_param("phase"):
-                        if (tour.phase.strip() != req.params["phase"].strip()):
+                        if (str(tour.phase.value) != req.params["phase"]):
                             continue
 
                     #if there is a me parameter, exclude the ones not matching
