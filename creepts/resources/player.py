@@ -2,6 +2,8 @@ import falcon
 import json
 import logging
 from .. import constants as const
+from web3 import Web3
+from web3.auto import w3
 
 LOGGER = logging
 
@@ -26,12 +28,15 @@ class Player:
             This method has no return
         """
 
+        LOGGER.info("Get player")
+        address = const.PLAYER_OWN_ADD
+        balance = 0
+
         try:
-            LOGGER.info("Get player")
-            resp.body = json.dumps({"address":const.PLAYER_OWN_ADD})
-            resp.status = falcon.HTTP_200
-
+            balance = w3.eth.getBalance(Web3.toChecksumAddress(address))
         except Exception as e:
+            # let's just log the exception and return a zero balance, so it works without the blockchain
             LOGGER.exception(e)
-            raise falcon.HTTPInternalServerError(description="Failed retrieving player info")
-
+        
+        resp.body = json.dumps({ "address": address, "balance": balance })
+        resp.status = falcon.HTTP_200
