@@ -4,9 +4,9 @@ import sys
 import json
 
 #Response files name template
-TESTDATA_FILENAME_BASE='instance_samples/instance_step_{}_pretty.json'
+TESTDATA_FILENAME_BASE='instance_samples/instance_step_{}.json'
 #Min and max index of reponse files
-TESTDATA_SIZE=15
+TESTDATA_SIZE=9
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.DEBUG)
