@@ -1,4 +1,5 @@
 from enum import Enum
+from datetime import datetime
 import json
 
 class TournamentPhase(Enum):
@@ -30,5 +31,8 @@ class TournamentJSONEncoder(json.JSONEncoder):
 
         if isinstance(obj, TournamentPhase):
             return obj.value
+
+        if isinstance(obj, datetime):
+            return obj.isoformat()
 
         return json.JSONEncoder.default(self, obj)

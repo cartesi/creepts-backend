@@ -24,7 +24,7 @@ class TestMapper(unittest.TestCase):
         self.assertEqual(tournament.phase, TournamentPhase.ROUND)
         self.assertEqual(tournament.currentRound, 0)
         self.assertEqual(tournament.lastRound, 0)
-        self.assertEqual(tournament.deadline, '2020-01-21T22:56:09+00:00')
+        self.assertEqual(tournament.deadline.isoformat(), '2020-01-21T22:56:09+00:00')
         self.assertEqual(tournament.map, 'original')
         self.assertEqual(tournament.name, 'saturday one')
         self.assertEqual(tournament.currentOpponent, None)

@@ -3,6 +3,8 @@ import json
 import traceback
 import sys
 import logging
+from datetime import datetime
+import pytz
 from .. import constants as const
 from ..utils import tournament_recovery_utils as tru
 from ..model.tournament import TournamentJSONEncoder, TournamentPhase
@@ -55,6 +57,9 @@ class Tournaments:
             tournaments_fetcher = tru.Fetcher()
 
             tournaments = tournaments_fetcher.get_all_tournaments()
+
+            # filter out expired tournaments
+            tournaments = list(filter(lambda tournament: tournament.deadline == None or tournament.deadline > pytz.UTC.localize(datetime.utcnow()), tournaments))
 
             #Recovering scores from db
             #TODO: recover other scores from blockchain, or by calculating the score by
