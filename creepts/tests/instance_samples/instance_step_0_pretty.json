@@ -1,0 +1,37 @@
+{
+    "concern": {
+        "contract_address": "0xd2800b63e99a7828c54fa193fdd8d60100eda29c",
+        "user_address": "0x3a0afba9a89cf64dd22a570d833f5da04f3020b6"
+    },
+    "index": "0x0",
+    "json_data": {
+        "level": "0x0",
+        "setup_hash": "0x865499c9c9b63cbd85152c7e2e2a14a3b195be1d91787cf99a7bf4fb39a5882d",
+        "final_time": "0x9184e72a000",
+        "current_state": "WaitingCommitAndReveal"
+    },
+    "name": "DApp",
+    "sub_instances": [
+        {
+            "concern": {
+                "contract_address": "0x70d51c654cda49321b85a4a2b64415e6df109c21",
+                "user_address": "0x3a0afba9a89cf64dd22a570d833f5da04f3020b6"
+            },
+            "index": "0x0",
+            "json_data": {
+                "instantiated_at": "0x5e277ef8",
+                "commit_duration": "0xc8",
+                "reveal_duration": "0xc8",
+                "score_word_position": "0xe000000000000000",
+                "log_drive_position": "0xc000000000000000",
+                "log_drive_log_size": "0x14",
+                "log_hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "has_revealed": false,
+                "log_available": false,
+                "current_state": "CommitPhase"
+            },
+            "name": "RevealCommit",
+            "sub_instances": []
+        }
+    ]
+}
