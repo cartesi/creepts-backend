@@ -57,7 +57,11 @@ class Mapper:
                         elif (match["claimer"] == const.PLAYER_OWN_ADD):
                             tournament.currentOpponent = match["challenger"]
 
-            #TODO: recover champion score, address and log
+                    if match_manager["current_state"] == "MatchesOver":
+                        # matches are over, assign the winner
+                        tournament.winner = match_manager["unmatched_player"]
+
+            #TODO: recover champion score and log
 
             return tournament
 
