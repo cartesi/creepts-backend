@@ -100,7 +100,7 @@ else:
 REVEAL_INSTANTIATOR_CONTRACT = "reveal_instantiator"
 
 CONTRACTS_MAPPING = {
-        REVEAL_INSTANTIATOR_CONTRACT: "RevealInstantiator.json"
+        REVEAL_INSTANTIATOR_CONTRACT: "node_modules/@cartesi/tournament/build/contracts/RevealInstantiator.json"
 }
 
 #Formatting contracts mapping to contain the full path of the contract specification files
