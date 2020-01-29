@@ -1,6 +1,8 @@
 import os
 
 os.environ['ACCOUNT_ADDRESS'] = "0x760841c050d07d3f74139154284d1cd8b5afa9c6"
+#Dummy value
+os.environ['CONTRACTS_DIR'] = "/"
 import unittest
 import json
 from creepts.dispatcher.contract import Contract
