@@ -2,8 +2,7 @@ import falcon
 import json
 import logging
 from .. import constants as const
-from web3 import Web3
-from web3.auto import w3
+from ..utils import blockchain_utils as bc_utils
 
 LOGGER = logging
 
@@ -33,10 +32,10 @@ class Player:
         balance = 0
 
         try:
-            balance = w3.eth.getBalance(Web3.toChecksumAddress(address))
+            balance = bc_utils.get_player_balance(address)
         except Exception as e:
             # let's just log the exception and return a zero balance, so it works without the blockchain
             LOGGER.exception(e)
-        
+
         resp.body = json.dumps({ "address": address, "balance": balance })
         resp.status = falcon.HTTP_200

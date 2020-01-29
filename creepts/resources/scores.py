@@ -6,7 +6,7 @@ import requests
 import logging
 
 from .. import constants as const
-from ..utils import game_log_utils, hash_utils
+from ..utils import game_log_utils, hash_utils, blockchain_utils
 from ..db import db_utilities
 from ..utils import tournament_recovery_utils as tru
 from ..model.tournament import TournamentPhase
@@ -200,10 +200,49 @@ class Scores:
             This method has no return
         """
 
-        #TODO: Recover from blockchain
+        error = None
+        try:
+            #Check if provided player_id is a valid eth address
+            if not blockchain_utils.is_address(player_id):
+                error = falcon.HTTPBadRequest(description="Provided player address is not a valid Ethereum address: {}".format(player_id))
+                raise
 
-        #Return not implemented
-        raise falcon.HTTPNotImplemented(description="Endpoint currently not implemented")
+            #Check if there is a tournament with this id
+            tournaments_fetcher = tru.Fetcher()
+
+            tour = tournaments_fetcher.get_tournament(tour_id)
+
+            if not tour:
+                #Not found, return 404
+                error = falcon.HTTPNotFound(description="No tournament found with the provided id: {}".format(tour_id))
+                raise
+
+            #Making sure the tournament is not in the commit phase
+            if tour.phase == TournamentPhase.COMMIT:
+                #It isn't return 400
+                error = falcon.HTTPBadRequest(description="The tournament with id {} is still in the commit phase".format(tour_id))
+                raise
+
+            #Making sure the player is participating in the given tournament
+            if not blockchain_utils.player_exists(tour.id, player_id):
+                #It doesn't return 400
+                error = falcon.HTTPBadRequest(description="There is no player {} enrolled in tournament {}".format(player_id, tour_id))
+                raise
+
+            resp_dict = {}
+            #Recovering score from player
+            resp_dict['score'] = blockchain_utils.get_player_score(tour.id, player_id)
+
+            resp.body = json.dumps(resp_dict)
+            resp.status = falcon.HTTP_200
+
+        except Exception as e:
+            if error:
+                LOGGER.exception(error)
+                raise error
+
+            LOGGER.exception(e)
+            raise falcon.HTTPInternalServerError(description="Failed recovering score")
 
     def _commit_log(self, tour_id, game_log):
         #Write log to file with the tour_id as name
@@ -257,3 +296,4 @@ class Scores:
         if (dispatcher_resp.status_code != 200):
             LOGGER.error("Failed to commit gamelog for tournament id {} and game log file name {}. Response content was {}".format(tour_id, packed_log_filename, dispatcher_resp.text))
             return falcon.HTTPInternalServerError(description="Failed to commit the gamelog for tournament id {} and game log filename {}".format(tour_id, packed_log_filename))
+

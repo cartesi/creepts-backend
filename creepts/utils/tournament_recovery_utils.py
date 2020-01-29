@@ -4,6 +4,7 @@ from .. import constants as const
 from ..dispatcher import api
 from ..mapping import mapper
 from ..db import db_utilities as db_utils
+from ..utils import blockchain_utils as block_utils
 
 LOGGER = logging
 
@@ -82,7 +83,40 @@ class Fetcher:
         #Putting the right scores in each tournament object
         for tour in tournaments:
             if tour.id in scores_dict.keys():
-                tour.scores=scores_dict[tour.id]
+                #Merge newly recovered scores with eventual ones that existed before
+                tour.scores={**tour.scores, **scores_dict[tour.id]}
 
         LOGGER.info("Recovered scores in db for tournaments with ids %s", tournament_ids)
         return tournaments
+
+    def populate_scores_from_blockchain(self, tournaments):
+
+        #TODO recover player logs
+        for tour in tournaments:
+            scores={}
+            #Getting winner score if available
+            if tour.winner:
+                try:
+                    winner_score = block_utils.get_player_score(tour.id, tour.winner)
+                    scores[tour.winner] = {"score":winner_score}
+                except Exception as e:
+                    #Log exception and keep trying to recover other scores
+                    LOGGER.error("Failed to recover score from player %s and tournament %d. Details:", tour.winner, tour.id)
+                    LOGGER.exception(e)
+
+            #Getting current opponent score if available
+            if tour.currentOpponent:
+                try:
+                    opponent_score = block_utils.get_player_score(tour.id, tour.currentOpponent)
+                    scores[tour.currentOpponent] = {"score":opponent_score}
+                except Exception as e:
+                    #Log exception and keep trying to recover other scores
+                    LOGGER.error("Failed to recover score from player %s and tournament %d. Details:", tour.currentOpponent, tour.id)
+                    LOGGER.exception(e)
+
+            #Merge old scores with the new ones
+            tour.scores={**tour.scores, **scores}
+
+        LOGGER.info("Recovered scores in blockchain for tournaments with ids %s", [t.id for t in tournaments])
+        return tournaments
+

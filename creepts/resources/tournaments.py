@@ -61,10 +61,9 @@ class Tournaments:
             # filter out expired tournaments
             tournaments = list(filter(lambda tournament: tournament.deadline == None or tournament.deadline > pytz.UTC.localize(datetime.utcnow()), tournaments))
 
-            #Recovering scores from db
-            #TODO: recover other scores from blockchain, or by calculating the score by
-            #fetching the player logs in the blockchain and running them by the offline verifier
+            #Recovering scores from db and blockchain
             tournaments = tournaments_fetcher.populate_scores_from_db(tournaments)
+            tournaments = tournaments_fetcher.populate_scores_from_blockchain(tournaments)
 
             filtered_tournaments = []
 
@@ -149,10 +148,9 @@ class Tournaments:
             if tour:
                 #Found the tournament
 
-                #Recovering scores from db
-                #TODO: recover other scores from blockchain, or by calculating the score by
-                #fetching the player logs in the blockchain and running them by the offline verifier
+                #Recovering scores from db and blockchain
                 tour_with_scores = tournaments_fetcher.populate_scores_from_db([tour])[0]
+                tour_with_scores = tournaments_fetcher.populate_scores_from_blockchain([tour])[0]
 
                 resp.body = json.dumps(tour_with_scores, cls=TournamentJSONEncoder)
                 resp.status = falcon.HTTP_200

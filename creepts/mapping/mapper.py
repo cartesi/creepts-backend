@@ -36,6 +36,27 @@ class Mapper:
             #It is
             tournament.phase = TournamentPhase.END
 
+            # Get MatchManager if any:
+            for child in dapp.children:
+                if child.name == "MatchManager":
+
+                    match_manager = child
+
+                    #Getting tournament info
+                    #TODO: remove or discover how to populate playerCount and totalRounds
+                    tournament.currentRound = match_manager["current_epoch"]
+                    tournament.lastRound = match_manager["last_match_epoch"]
+
+                    #Trying to recover last opponent info
+                    if len(match_manager.children) > 0 and match_manager.children[0].name == "Match":
+                        match = match_manager.children[0]
+
+                        #Checking if player is the challenger or the claimer
+                        if (match["challenger"] == const.PLAYER_OWN_ADD):
+                            tournament.currentOpponent = match["claimer"]
+                        elif (match["claimer"] == const.PLAYER_OWN_ADD):
+                            tournament.currentOpponent = match["challenger"]
+
             #TODO: recover champion score, address and log
 
             return tournament

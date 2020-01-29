@@ -89,3 +89,20 @@ MAPPED_MAP_INFO_FILENAME = "creepts/map_info.yaml"
 
 #TOURNAMENT RESOURCE RELATED
 TOURNAMENTS_RESPONSE_LIMIT = 100
+
+#BLOCKCHAIN RELATED
+if 'CONTRACTS_DIR' in os.environ.keys():
+    CONTRACTS_DIR = os.environ['CONTRACTS_DIR']
+else:
+    print("Must define CONTRACTS_DIR env variable with the path of the contracts specifications directory")
+    sys.exit(1)
+
+REVEAL_INSTANTIATOR_CONTRACT = "reveal_instantiator"
+
+CONTRACTS_MAPPING = {
+        REVEAL_INSTANTIATOR_CONTRACT: "RevealInstantiator.json"
+}
+
+#Formatting contracts mapping to contain the full path of the contract specification files
+for k in CONTRACTS_MAPPING.keys():
+    CONTRACTS_MAPPING[k] = "{}/{}".format(CONTRACTS_DIR, CONTRACTS_MAPPING[k])
