@@ -1,15 +1,15 @@
 openapi: 3.0.0
 info:
-  title: anuto
+  title: creepts
   version: '1.0'
-  description: API for Anuto TD
+  description: API for Creepts
   contact:
     name: Cartesi
     url: https://www.cartesi.io
     email: info@cartesi.io
   license:
     name: Apache 2.0
-    url: 'https://github.com/cartesi-corp/anuto-server/blob/develop/LICENSE'
+    url: 'https://github.com/cartesi/creepts-backend/blob/master/LICENSE'
 servers:
   - url: 'http://localhost:3000'
 tags:
