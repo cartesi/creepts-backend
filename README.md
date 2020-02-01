@@ -1,4 +1,7 @@
-# REST API
+# Creepts Backend server
+
+This repo implements a REST API in Python that serves the [Creepts game front-end](https://github.com/cartesi/creepts-game).
+The API talks to the [Creepts DApp](https://github.com/cartesi/creepts-dapp), which talks to the blockchain.
 
 The REST API is defined in OpenAPI V3, in the directory `reference/anuto/`.
 That also includes examples of each endpoint response.
