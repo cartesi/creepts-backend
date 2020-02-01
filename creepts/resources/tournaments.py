@@ -64,6 +64,7 @@ class Tournaments:
             #Recovering scores from db and blockchain
             tournaments = tournaments_fetcher.populate_scores_from_db(tournaments)
             tournaments = tournaments_fetcher.populate_scores_from_blockchain(tournaments)
+            tournaments = tournaments_fetcher.populate_number_of_players_from_blockchain(tournaments)
 
             filtered_tournaments = []
 
@@ -151,6 +152,7 @@ class Tournaments:
                 #Recovering scores from db and blockchain
                 tour_with_scores = tournaments_fetcher.populate_scores_from_db([tour])[0]
                 tour_with_scores = tournaments_fetcher.populate_scores_from_blockchain([tour])[0]
+                tour_with_scores = tournaments_fetcher.populate_number_of_players_from_blockchain([tour])[0]
 
                 resp.body = json.dumps(tour_with_scores, cls=TournamentJSONEncoder)
                 resp.status = falcon.HTTP_200

@@ -11,6 +11,17 @@ CONTRACT_CACHE={}
 def is_address(address):
     return Web3.isAddress(address)
 
+def get_number_of_players(tour_id):
+
+    LOGGER.debug("Getting number of players in tournament %d", tour_id)
+
+    rev_inst = _get_contract_instance(const.REVEAL_INSTANTIATOR_CONTRACT)
+    number_of_players = rev_inst.functions.getNumberOfPlayers(tour_id).call()
+
+    LOGGER.info("Number of players in tournament %d: %d", tour_id, number_of_players)
+
+    return number_of_players
+
 def player_exists(tour_id, address):
 
     LOGGER.debug("Checking if player %s is in tournament %d", address, tour_id)

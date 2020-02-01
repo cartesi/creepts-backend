@@ -120,3 +120,15 @@ class Fetcher:
         LOGGER.info("Recovered scores in blockchain for tournaments with ids %s", [t.id for t in tournaments])
         return tournaments
 
+    def populate_number_of_players_from_blockchain(self, tournaments):
+        for tournament in tournaments:
+            try:
+                tournament.playerCount = block_utils.get_number_of_players(tournament.id)
+            except Exception as e:
+                #Log exception and keep trying to recover other scores
+                LOGGER.error("Failed to recover number of players in tournament %d. Details:", tournament.id)
+                LOGGER.exception(e)
+
+        LOGGER.info("Recovered number of players in blockchain for tournaments with ids %s", [t.id for t in tournaments])
+        return tournaments
+
