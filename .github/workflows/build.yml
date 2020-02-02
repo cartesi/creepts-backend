@@ -19,12 +19,12 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - name: Build Docker Image
-        run: docker build . -t cartesi/creepts-backend:${TAG}
-
       - run: echo "::set-env name=TAG::${GITHUB_REF:11}"
         if: startsWith(github.ref, 'refs/tags/v')
   
+      - name: Build Docker Image
+        run: docker build . -t cartesi/creepts-backend:${TAG}
+
       - name: Push to Docker Hub
         run: |
           echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
