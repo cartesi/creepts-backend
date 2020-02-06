@@ -42,7 +42,10 @@ else:
 print('Using account ' + PLAYER_OWN_ADD)
 
 #TEST RELATED
-
+READ_ONLY = False
+if 'READ_ONLY' in os.environ.keys():
+    READ_ONLY = True
+    
 MOCKED_SERVER = False
 #Overwrite if environment variable set
 if 'MOCKED_SERVER' in os.environ.keys():

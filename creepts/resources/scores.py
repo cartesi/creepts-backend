@@ -85,6 +85,15 @@ class Scores:
             #Not found, return 404
             raise falcon.HTTPNotFound(description="No tournament found with the provided id: {}".format(tour_id))
 
+        # if server is in read-only mode, respond successfully as if score was submitted
+        # this is for testing purposes, in the future we may support a real read-only mode, including the 
+        # front-end in the process, with proper user feedback
+        if const.READ_ONLY:
+            LOGGER.info("Server in read-only mode, returning 201 and not submitting log")
+            resp.body = json.dumps({"title":"201 Created","description":"Server in read-only mode"})
+            resp.status = falcon.HTTP_201
+            return
+
         #Checking the tournament is in the commit phase
         if tour.phase != TournamentPhase.COMMIT:
             #It isn't return 403
