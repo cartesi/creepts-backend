@@ -19,30 +19,58 @@ import json
 from .. import constants as const
 
 LOGGER=logging
+
+# keep a cache of web3 contract instance by the contract name
 CONTRACT_CACHE={}
 
 def is_address(address):
     return Web3.isAddress(address)
 
-def get_number_of_players(tour_id):
+def get_number_of_players(dapp):
 
-    LOGGER.debug("Getting number of players in tournament %d", tour_id)
+    tournament_id = dapp.index
+    LOGGER.debug("Getting number of players in tournament %d", tournament_id)
 
-    rev_inst = _get_contract_instance(const.REVEAL_INSTANTIATOR_CONTRACT)
-    number_of_players = rev_inst.functions.getNumberOfPlayers(tour_id).call()
+    # get the reveal child contract
+    reveal = next((child for child in dapp.children if child.name == 'RevealCommit'), None)
 
-    LOGGER.info("Number of players in tournament %d: %d", tour_id, number_of_players)
+    # check if RevealCommit really exists
+    if reveal is None:
+        error = "Contract {} has no RevealCommit sub-instance".format(dapp.name)
+        LOGGER.error(error)
+        raise ValueError(error)
+
+    # get the web3 instance
+    reveal_instance = _get_contract_instance(reveal)
+
+    # call the contract function
+    number_of_players = reveal_instance.functions.getNumberOfPlayers(reveal.index).call()
+
+    LOGGER.info("Number of players in tournament %d: %d", tournament_id, number_of_players)
 
     return number_of_players
 
-def player_exists(tour_id, address):
+def player_exists(dapp, address):
 
-    LOGGER.debug("Checking if player %s is in tournament %d", address, tour_id)
+    tournament_id = dapp.index
+    LOGGER.debug("Checking if player %s is in tournament %d", address, tournament_id)
 
-    rev_inst = _get_contract_instance(const.REVEAL_INSTANTIATOR_CONTRACT)
-    exists = rev_inst.functions.playerExist(tour_id, Web3.toChecksumAddress(address)).call()
+    # get the reveal child contract
+    reveal = next((child for child in dapp.children if child.name == 'RevealCommit'), None)
 
-    LOGGER.info("Player %s exists in tournament %d: %r", address, tour_id, exists)
+    # check if RevealCommit really exists
+    if reveal is None:
+        error = "Contract {} has no RevealCommit sub-instance".format(dapp.name)
+        LOGGER.error(error)
+        raise ValueError(error)
+
+    # get the web3 instance
+    reveal_instance = _get_contract_instance(reveal)
+
+    # call the contract function
+    exists = reveal_instance.functions.playerExist(reveal.index, Web3.toChecksumAddress(address)).call()
+
+    LOGGER.info("Player %s exists in tournament %d: %r", address, tournament_id, exists)
 
     return exists
 
@@ -54,35 +82,49 @@ def get_player_balance(address):
         raise ValueError(error)
 
     LOGGER.info("Querying blockchain for eth balance of address %s", address)
+
+    # pylint: disable=no-member
     balance =  w3.eth.getBalance(Web3.toChecksumAddress(address))
     LOGGER.info("Balance for %s : %d", address, balance)
     return balance
 
-def get_player_score(tour_id, address):
+def get_player_score(dapp, address):
     if not is_address(address):
         error = "Given address is not a valid Ethereum address: {}".format(address)
         LOGGER.error(error)
         raise ValueError(error)
 
-    LOGGER.info("Querying blockchain for player %s score in tournament %d", address, tour_id)
+    tournament_id = dapp.index
+    LOGGER.info("Querying blockchain for player %s score in tournament %d", address, tournament_id)
 
-    #Get reveal instantiator contract instance
-    rev_inst = _get_contract_instance(const.REVEAL_INSTANTIATOR_CONTRACT)
+    # get the reveal child contract
+    reveal = next((child for child in dapp.children if child.name == 'RevealCommit'), None)
+
+    # check if RevealCommit really exists
+    if reveal is None:
+        error = "Contract {} has no RevealCommit sub-instance".format(dapp.name)
+        LOGGER.error(error)
+        raise ValueError(error)
+
+    # get the web3 instance
+    reveal_instance = _get_contract_instance(reveal)
     LOGGER.debug("Got reveal instantiator contract manipulation instance")
 
-    #Recover score from blockchain
-    score = rev_inst.functions.getScore(tour_id, Web3.toChecksumAddress(address)).call()
-    LOGGER.info("Score for player %s in tournament %d is %d", address, tour_id, score)
+    # get score from blockchain
+    score = reveal_instance.functions.getScore(reveal.index, Web3.toChecksumAddress(address)).call()
+    LOGGER.info("Score for player %s in tournament %d is %d", address, tournament_id, score)
 
     return score
 
-def _get_contract_instance(contract_name):
+def _get_contract_instance(contract):
     """
-    Returns an instance web3 contract manipulator of the given contract name
+    Returns an instance web3 contract manipulator of the given contract object
     and network of the active ethereum node using data available from the
     truffle deployment file
     """
-    #Return from contract instances cache, if in there
+    contract_name = contract.name
+    
+    # return from contract instances cache, if in there
     if contract_name in CONTRACT_CACHE.keys():
         return CONTRACT_CACHE[contract_name]
 
@@ -94,11 +136,17 @@ def _get_contract_instance(contract_name):
     with open(contracts_mapping[contract_name]) as contract_info_file:
         contract_info_data = json.load(contract_info_file)
 
+    # get the ABI from the truffle json file
     contract_abi = contract_info_data['abi']
+
+    # pylint: disable=no-member
     net_id = w3.net.version
-    contract_addr = contract_info_data['networks'][net_id]['address']
+
+    # get the contract address also from the json file
+    # XXX: we could use the contract.contract_address that is coming from the dispatcher instead
+    contract_address = contract_info_data['networks'][net_id]['address']
 
     #Get contract manipulation instance and store it in the cache
-    CONTRACT_CACHE[contract_name] = w3.eth.contract(address=contract_addr, abi=contract_abi)
+    CONTRACT_CACHE[contract_name] = w3.eth.contract(address=contract_address, abi=contract_abi)
 
     return CONTRACT_CACHE[contract_name]

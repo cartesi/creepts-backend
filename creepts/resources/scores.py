@@ -213,7 +213,7 @@ class Scores:
             The id of the desired tournament
 
         player_id : str
-            The id of the desired player
+            The address of the desired player
 
         Returns
         -------
@@ -245,16 +245,16 @@ class Scores:
                 error = falcon.HTTPBadRequest(description="The tournament with id {} is still in the commit phase".format(tour_id))
                 raise
 
+            # get score from tour.scores, which already contains scores from self, opponent and winner (if they exist)
+
             #Making sure the player is participating in the given tournament
-            if not blockchain_utils.player_exists(tour.id, player_id):
+            if player_id not in tour.scores:
                 #It doesn't return 400
-                error = falcon.HTTPBadRequest(description="There is no player {} enrolled in tournament {}".format(player_id, tour_id))
+                error = falcon.HTTPBadRequest(description="Player {} is not myself, or my opponent or the winner in tournament {}".format(player_id, tour_id))
                 raise
 
             resp_dict = {}
-            #Recovering score from player
-            resp_dict['score'] = blockchain_utils.get_player_score(tour.id, player_id)
-
+            resp_dict['score'] = tour.scores[player_id]
             resp.body = json.dumps(resp_dict)
             resp.status = falcon.HTTP_200
 

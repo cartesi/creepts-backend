@@ -18,7 +18,7 @@ import json
 
 #Response files name template
 TESTDATA_FILENAME_BASE='instance_samples/instance_step_{}.json'
-#Min and max index of reponse files
+#Min and max index of response files
 TESTDATA_SIZE=9
 
 LOGGER = logging.getLogger()

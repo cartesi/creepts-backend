@@ -113,10 +113,8 @@ else:
     print("Must define CONTRACTS_DIR env variable with the path of the contracts specifications directory")
     sys.exit(1)
 
-REVEAL_INSTANTIATOR_CONTRACT = "reveal_instantiator"
-
 CONTRACTS_MAPPING = {
-        REVEAL_INSTANTIATOR_CONTRACT: "node_modules/@cartesi/tournament/build/contracts/RevealInstantiator.json"
+    "RevealCommit": "node_modules/@cartesi/tournament/build/contracts/RevealInstantiator.json"
 }
 
 #Formatting contracts mapping to contain the full path of the contract specification files

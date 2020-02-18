@@ -15,7 +15,7 @@ import falcon
 import json
 import logging
 from .. import constants as const
-from ..utils import blockchain_utils as bc_utils
+from ..utils import blockchain_utils
 
 LOGGER = logging
 
@@ -45,7 +45,7 @@ class Player:
         balance = 0
 
         try:
-            balance = bc_utils.get_player_balance(address)
+            balance = blockchain_utils.get_player_balance(address)
         except Exception as e:
             # let's just log the exception and return a zero balance, so it works without the blockchain
             LOGGER.exception(e)

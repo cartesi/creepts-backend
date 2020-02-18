@@ -31,6 +31,9 @@ class API:
 
     def get_instance(self, index):
         response = requests.get(self.url, json={"Instance": index})
+        
         # TODO: handle errors
         json_response = response.json()
+
+        # instantiate a Contract wrapper class with the json
         return Contract(json_response)
