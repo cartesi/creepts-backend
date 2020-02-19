@@ -1,9 +1,9 @@
 0:
     name: original
 1:
-    name: waiting-line
+    name: waiting_line
 2:
-    name: turn-round
+    name: turn_round
 3:
     name: hurry
 4:

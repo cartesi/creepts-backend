@@ -1,7 +1,7 @@
 {
     "id": "3",
     "name": "I hate waiting lines (August)",
-    "map": "waiting-line",
+    "map": "waiting_line",
     "playerCount": 167,
     "phase": "reveal",
     "deadline": "2019-09-30T00:00:00",

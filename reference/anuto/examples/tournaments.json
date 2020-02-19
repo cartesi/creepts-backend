@@ -48,7 +48,7 @@
         {
             "id": "3",
             "name": "I hate waiting lines (August)",
-            "map": "waiting-line",
+            "map": "waiting_line",
             "playerCount": 167,
             "phase": "reveal",
             "deadline": "2019-09-30T00:00:00",
@@ -90,7 +90,7 @@
         {
             "id": "6",
             "name": "I hate waiting lines",
-            "map": "waiting-line",
+            "map": "waiting_line",
             "playerCount": 16,
             "phase": "commit",
             "deadline": "2019-10-15T14:00:00"
@@ -98,7 +98,7 @@
         {
             "id": "7",
             "name": "Turn a round",
-            "map": "turn-round",
+            "map": "turn_round",
             "playerCount": 0,
             "phase": "commit",
             "deadline": "2019-10-15T14:00:00",
