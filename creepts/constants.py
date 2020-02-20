@@ -54,9 +54,9 @@ if 'MOCKED_SERVER' in os.environ.keys():
 #DB RELATED
 
 if MOCKED_SERVER:
-    DB_NAME = "creepts/tests/creepts_test.db"
+    DB_NAME = os.getenv("DB_NAME", default="creepts/tests/creepts_test.db")
 else:
-    DB_NAME = "creepts/db/creepts.db"
+    DB_NAME = os.getenv("DB_NAME", default="creepts/db/creepts.db")
 
 USER_LOG_TABLE = "user_logs"
 CREATE_USER_LOG_TABLE = "CREATE TABLE {} (user_id TEXT NOT NULL, tournament_id TEXT NOT NULL, score INTEGER NOT NULL, waves INTEGER NOT NULL, log BLOB NOT NULL);".format(USER_LOG_TABLE)
@@ -67,31 +67,23 @@ UPDATE_LOG_TABLE_FOR_USER_AND_TOURNAMENT = "UPDATE {} SET score=?, waves=?, log=
 
 #GAMEPLAY LOG FILES RELATED
 
-LOG_FILES_OUTPUT_DIR = "creepts/logs-to-share/"
-if 'LOG_FILES_OUTPUT_DIR' in os.environ.keys():
-    LOG_FILES_OUTPUT_DIR = os.environ['LOG_FILES_OUTPUT_DIR']
+LOG_FILES_OUTPUT_DIR = os.getenv("LOG_FILES_OUTPUT_DIR", default="creepts/logs-to-share/")
 DEFAULT_PAGE_LOG2_BYTES_SIZE = 10
 DEFAULT_MERKLE_TREE_LOG2_BYTES_SIZE = 20
 
 #MERKLE TREE ROOT HASH CALCULATOR BINARY
-HASH_BINARY_CMD = "cartesi-machine-hash"
-if 'HASH_BINARY_CMD' in os.environ.keys():
-    HASH_BINARY_CMD = os.environ['HASH_BINARY_CMD']
+HASH_BINARY_CMD = os.getenv("HASH_BINARY_CMD", default="cartesi-machine-hash")
 
 #PACK LOG RELATED
 PACKED_LOG_EXT = "br.cpio"
-PACKLOG_CMD = "packlog"
-if 'PACKLOG_CMD' in os.environ.keys():
-    PACKLOG_CMD = os.environ['PACKLOG_CMD']
+PACKLOG_CMD = os.getenv("PACKLOG_CMD", default="packlog")
 
 #TRUNCATE RELATED
 DEFAULT_TRUNCATE_SIZE="1M"
 TRUNCATE_BIN="truncate"
 
 #DISPATCHER RELATED
-DISPATCHER_URL = "http://dispatcher:3001"
-if 'DISPATCHER_URL' in os.environ.keys():
-    DISPATCHER_URL = os.environ['DISPATCHER_URL']
+DISPATCHER_URL = os.getenv("DISPATCHER_URL", default="http://dispatcher:3001")
 COMMIT_LOG_URL = DISPATCHER_URL
 
 #LOGGING RELATED
