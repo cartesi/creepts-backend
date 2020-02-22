@@ -71,9 +71,6 @@ class Tournaments:
 
             tournaments = tournaments_fetcher.get_all_tournaments()
 
-            # filter out expired tournaments
-            tournaments = list(filter(lambda tournament: tournament.deadline == None or tournament.deadline > pytz.UTC.localize(datetime.utcnow()), tournaments))
-
             #Recovering scores from db and blockchain
             tournaments = tournaments_fetcher.populate_scores_from_db(tournaments)
 
