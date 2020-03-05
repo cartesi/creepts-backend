@@ -1,0 +1,15 @@
+#!/bin/bash
+
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+GRPCDIR=$SCRIPTPATH/grpc-interfaces
+OUTDIR=$SCRIPTPATH/creepts/logger
+PROTOFILES="cartesi-base.proto logger-high.proto"
+
+# create output directory (if not exists)
+mkdir -p $OUTDIR
+
+# generate python code from .proto
+python3 -m grpc_tools.protoc -I$GRPCDIR --python_out=$OUTDIR --grpc_python_out=$OUTDIR $PROTOFILES
+
+# fix import statements
+2to3 -w -n $OUTDIR

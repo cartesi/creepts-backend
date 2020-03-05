@@ -20,15 +20,13 @@ from . import constants as const
 #Configuring the logging for the application
 logging.config.fileConfig(const.LOGGING_CONFIG_FILENAME)
 
-LOGGER = logging
-
 #Import mocked resources if MOCKED_SERVER is set
 if const.MOCKED_SERVER:
-    LOGGER.debug("Importing mocked resources")
+    logging.debug("Importing mocked resources")
     from .tests.mock_tournaments import Tournaments
     from .tests.mock_scores import Scores
 else:
-    LOGGER.debug("Importing real resources")
+    logging.debug("Importing real resources")
     from .resources.tournaments import Tournaments
     from .resources.scores import Scores
 from .resources.player import Player
@@ -40,7 +38,7 @@ cors = CORS(
 
 api = falcon.API(middleware=[cors.middleware])
 api.add_route('/api/tournaments', Tournaments())
-api.add_route('/api/tournaments/{tour_id}', Tournaments(), suffix='single')
-api.add_route('/api/tournaments/{tour_id}/scores/my', Scores(), suffix='my')
-api.add_route('/api/tournaments/{tour_id}/scores/{player_id}', Scores())
+api.add_route('/api/tournaments/{tournament_id}', Tournaments(), suffix='single')
+api.add_route('/api/tournaments/{tournament_id}/scores/my', Scores(), suffix='my')
+api.add_route('/api/tournaments/{tournament_id}/scores/{player_id}', Scores())
 api.add_route('/api/me', Player())

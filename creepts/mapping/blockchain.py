@@ -38,20 +38,22 @@ class BlockchainDecorator:
         if tournament.winner:
             try:
                 winner_score = blockchain_utils.get_player_score(dapp, tournament.winner)
-                scores[tournament.winner] = { "score": winner_score }
+                commit_hash = blockchain_utils.get_player_hash(dapp, tournament.winner)
+                scores[tournament.winner] = { "score": winner_score, "hash": commit_hash }
             except Exception as e:
                 # log exception and keep trying to recover other scores
-                logging.error("Failed to recover score from player %s and tournament %d. Details:", tournament.winner, tournament.id)
+                logging.error("Failed to recover score or hash from player %s and tournament %d. Details:", tournament.winner, tournament.id)
                 logging.exception(e)
 
         # getting current opponent score if available
         if tournament.currentOpponent:
             try:
                 opponent_score = blockchain_utils.get_player_score(dapp, tournament.currentOpponent)
-                scores[tournament.currentOpponent] = { "score": opponent_score }
+                commit_hash = blockchain_utils.get_player_hash(dapp, tournament.currentOpponent)
+                scores[tournament.currentOpponent] = { "score": opponent_score, "hash": commit_hash }
             except Exception as e:
                 #Log exception and keep trying to recover other scores
-                logging.error("Failed to recover score from player %s and tournament %d. Details:", tournament.currentOpponent, tournament.id)
+                logging.error("Failed to recover score or hash from player %s and tournament %d. Details:", tournament.currentOpponent, tournament.id)
                 logging.exception(e)
 
         # merge old scores with the new ones

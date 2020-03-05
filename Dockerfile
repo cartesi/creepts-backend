@@ -40,6 +40,7 @@ WORKDIR $BASE/creepts
 # copy application
 COPY . .
 COPY packlog $BASE/bin/
+COPY unpacklog $BASE/bin/
 
 ENV DISPATCHER_HOST=dispatcher
 ENV DISPATCHER_PORT=3001

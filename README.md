@@ -24,6 +24,7 @@ export CONTRACTS_DIR=<PATH TO THE CREEPTS DAPP DIRECTORY> #the one from the cree
 export ACCOUNT_ADDRESS=<ETH ADDRESS TO USE FOR THE PLAYER> #alternatively you can specify the MNEMONIC env variable with the mnemonic of the desired eth wallet
 export DISPATCHER_URL=<URL OF THE DISPATCHER SERVER> #the one from the creepts-dapp repository
 export PACKLOG_CMD=<COMMAND TO USE THE PACKLOG SCRIPT> #there is one in the root directory of this repo
+export UNPACKLOG_CMD=<COMMAND TO USE THE UNPACKLOG SCRIPT> #there is one in the root directory of this repo
 export HASH_BINARY_CMD=<COMMAND TO USE THE CARTESI MACHINE HASH TOOL> #available in the cartesi machine-emulator repository
 export WEB3_PROVIDER_URI=<WITH THE URI OF THE AVAILABLE ETHEREUM NODE>
 ```

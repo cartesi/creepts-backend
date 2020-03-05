@@ -48,32 +48,82 @@ def merkle_root_hash(file_path, page_log2_bytes_size=const.DEFAULT_PAGE_LOG2_BYT
 
 def pack_log_file(file_path):
 
-    LOGGER.info("Compacting ant arquiving file '{}'".format(file_path))
+    logging.info("Compacting and arquiving file '{}'".format(file_path))
 
     packed_log_filename = "{}.{}".format(file_path, const.PACKED_LOG_EXT)
     cmd_line = [const.PACKLOG_CMD, file_path, packed_log_filename]
-    LOGGER.debug("Executing {}".format(" ".join(cmd_line)))
-    proc = None
-    try:
-        proc = subprocess.Popen(cmd_line, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-        out, err = proc.communicate()
-        LOGGER.debug("\nStdout:\n{}\nStderr:\n{}".format(out.decode("utf-8"), err.decode("utf-8")))
-    except Exception as e:
-        err_msg = "Failed to compact and archive file '{}'".format(file_path)
-        LOGGER.error(err_msg)
-        LOGGER.exception(e)
-        if (proc):
-            out, err = proc.communicate()
-            LOGGER.debug("\nStdout:\n{}\nStderr:\n{}".format(out.decode("utf-8"), err.decode("utf-8")))
-        return None
+    logging.debug("Executing {}".format(" ".join(cmd_line)))
 
-    if (proc.returncode == 0):
+    result = subprocess.run(cmd_line, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if result.returncode == 0:
         #Remove original file and return the packed log filename
         os.remove(file_path)
         return packed_log_filename
+    else:
+        logging.error('Error executing command: {}'.format(result.returncode))
+        logging.error(result.stderr.decode('utf-8'))
+        return None
+
+    #proc = None
+    #try:
+    #    proc = subprocess.Popen(cmd_line, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    #    out, err = proc.communicate()
+    #    LOGGER.debug("\nStdout:\n{}\nStderr:\n{}".format(out.decode("utf-8"), err.decode("utf-8")))
+    #except Exception as e:
+    #    err_msg = "Failed to compact and archive file '{}'".format(file_path)
+    #    LOGGER.error(err_msg)
+    #    LOGGER.exception(e)
+    #    if (proc):
+    #        out, err = proc.communicate()
+    #        LOGGER.debug("\nStdout:\n{}\nStderr:\n{}".format(out.decode("utf-8"), err.decode("utf-8")))
+    #    return None
+
+    #if (proc.returncode == 0):
+    #    #Remove original file and return the packed log filename
+    #    os.remove(file_path)
+    #    return packed_log_filename
 
     LOGGER.error("Failed to compress and archive file '{}', processed returned non-zero code".format(file_path))
     return None
+
+def unpack_log_file(file_path):
+
+    logging.info("Unarchiving and unpacking file '{}'".format(file_path))
+
+    packed_log_filename = "{}.{}".format(file_path, const.PACKED_LOG_EXT)
+    cmd_line = [const.UNPACKLOG_CMD, packed_log_filename, file_path]
+    LOGGER.debug("Executing {}".format(" ".join(cmd_line)))
+
+    result = subprocess.run(cmd_line, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if result.returncode == 0:
+        os.remove(packed_log_filename)
+        return file_path
+    else:
+        logging.error('Error executing command: {}'.format(result.returncode))
+        logging.error(result.stderr.decode('utf-8'))
+        return None
+
+#    proc = None
+#    try:
+#        proc = subprocess.Popen(cmd_line, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+#        out, err = proc.communicate()
+#        LOGGER.debug("\nStdout:\n{}\nStderr:\n{}".format(out.decode("utf-8"), err.decode("utf-8")))
+#    except Exception as e:
+#        err_msg = "Failed to unarchive and uncompress file '{}'".format(packed_log_filename)
+#        LOGGER.error(err_msg)
+#        LOGGER.exception(e)
+#        if (proc):
+#            out, err = proc.communicate()
+#            LOGGER.debug("\nStdout:\n{}\nStderr:\n{}".format(out.decode("utf-8"), err.decode("utf-8")))
+#        return None
+    
+#    if (proc.returncode == 0):
+#        #Remove original file and return the unpacked log filename
+#        os.remove(packed_log_filename)
+#        return file_path
+
+#    LOGGER.error("Failed to unarchive and decompress file '{}', processed returned non-zero code".format(packed_log_filename))
+#    return None
 
 def truncate_file(file_path, size=const.DEFAULT_TRUNCATE_SIZE):
 

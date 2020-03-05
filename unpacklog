@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e
+
+if [ "$#" -ne 2 ]; then
+    echo $0 "<log-drive> <output-log>"
+    exit 1
+fi
+
+tmpdir=$(mktemp -d -t creepts-XXXXXXXXXX)
+(cp $1 /$tmpdir/log.json.br.cpio; cd $tmpdir; cat log.json.br.cpio | cpio -i; brotli -d -o log.json log.json.br)
+cp $tmpdir/log.json $2
+
+rm -rf  $tmpdir

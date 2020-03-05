@@ -35,21 +35,15 @@ elif 'ACCOUNT_ADDRESS' in os.environ.keys():
 
 else:
     print('Must define MNEMONIC or ACCOUNT_ADDRESS for the player address')
-    sys.exit(1)
+    #sys.exit(1)
 
 # TODO: logging does not work here
 # logging.info('Using account ' + PLAYER_OWN_ADD)
-print('Using account ' + PLAYER_OWN_ADD)
+#print('Using account ' + PLAYER_OWN_ADD)
 
 #TEST RELATED
-READ_ONLY = False
-if 'READ_ONLY' in os.environ.keys():
-    READ_ONLY = True
-    
-MOCKED_SERVER = False
-#Overwrite if environment variable set
-if 'MOCKED_SERVER' in os.environ.keys():
-    MOCKED_SERVER = True
+READ_ONLY = bool(os.getenv('READ_ONLY'))
+MOCKED_SERVER = bool(os.getenv('MOCKED_SERVER'))
 
 #DB RELATED
 
@@ -67,6 +61,8 @@ UPDATE_LOG_TABLE_FOR_USER_AND_TOURNAMENT = "UPDATE {} SET score=?, waves=?, log=
 
 #GAMEPLAY LOG FILES RELATED
 
+LOGGER_URL = os.getenv("LOGGER_URL", default="logger:50051")
+LOGGER_DATA_DIR = os.getenv("LOGGER_DATA_DIR", default="/opt/cartesi/srv/logger-server")
 LOG_FILES_OUTPUT_DIR = os.getenv("LOG_FILES_OUTPUT_DIR", default="creepts/logs-to-share/")
 DEFAULT_PAGE_LOG2_BYTES_SIZE = 10
 DEFAULT_MERKLE_TREE_LOG2_BYTES_SIZE = 20
@@ -76,7 +72,8 @@ HASH_BINARY_CMD = os.getenv("HASH_BINARY_CMD", default="cartesi-machine-hash")
 
 #PACK LOG RELATED
 PACKED_LOG_EXT = "br.cpio"
-PACKLOG_CMD = os.getenv("PACKLOG_CMD", default="packlog")
+PACKLOG_CMD = os.getenv("PACKLOG_CMD", default="./packlog")
+UNPACKLOG_CMD = os.getenv("UNPACKLOG_CMD", default="./unpacklog")
 
 #TRUNCATE RELATED
 DEFAULT_TRUNCATE_SIZE="1M"
@@ -99,12 +96,7 @@ MAPPED_MAP_INFO_FILENAME = "creepts/map_info.yaml"
 TOURNAMENTS_RESPONSE_LIMIT = 100
 
 #BLOCKCHAIN RELATED
-if 'CONTRACTS_DIR' in os.environ.keys():
-    CONTRACTS_DIR = os.environ['CONTRACTS_DIR']
-else:
-    print("Must define CONTRACTS_DIR env variable with the path of the contracts specifications directory")
-    sys.exit(1)
-
+CONTRACTS_DIR = os.getenv('CONTRACTS_DIR', default=".")
 CONTRACTS_MAPPING = {
     "RevealCommit": "node_modules/@cartesi/tournament/build/contracts/RevealInstantiator.json"
 }

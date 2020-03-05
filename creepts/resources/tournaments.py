@@ -124,7 +124,7 @@ class Tournaments:
             LOGGER.exception(e)
             raise falcon.HTTPInternalServerError(description="Failed retrieving tournaments")
 
-    def on_get_single(self, req, resp, tour_id):
+    def on_get_single(self, req, resp, tournament_id):
         """
         Handles the get method for a single Tournament
 
@@ -139,7 +139,7 @@ class Tournaments:
             tournament similar to the one available in:
             <project_root>/reference/anuto/examples/tournament.json
 
-        tour_id : str
+        tournament_id : str
             The id of the desired tournament
 
         Returns
@@ -152,7 +152,7 @@ class Tournaments:
             #Recoverign tournament from dispatcher, if it exists
             tournaments_fetcher = tru.Fetcher()
 
-            tour = tournaments_fetcher.get_tournament(tour_id)
+            tour = tournaments_fetcher.get_tournament(tournament_id)
 
             if tour:
                 #Found the tournament
