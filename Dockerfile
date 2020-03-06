@@ -23,6 +23,7 @@ RUN \
     cd /root/grpc-interfaces && \
     python3 -m grpc_tools.protoc -I. --python_out=./out --grpc_python_out=./out \
     cartesi-base.proto logger-high.proto && \
+    touch ./out/__init__.py && \
     2to3 -w -n ./out
 
 FROM python:3.7.5-alpine3.10
@@ -51,7 +52,7 @@ COPY packlog $BASE/bin/
 COPY unpacklog $BASE/bin/
 
 # copy gRPC generated code
-COPY --from=builder /root/grpc-interfaces/out/*.py creepts/logger/
+COPY --from=builder /root/grpc-interfaces/out/*_pb2*.py creepts/logger/
 
 ENV DISPATCHER_HOST=dispatcher
 ENV DISPATCHER_PORT=3001
