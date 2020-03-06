@@ -14,8 +14,16 @@ ENV PATH=/root/.local/bin:$PATH
 
 # install requirements
 COPY requirements.txt .
-RUN pip3 install --user -r requirements.txt
+RUN GRPC_PYTHON_BUILD_EXT_COMPILER_JOBS=$(nproc) pip3 install --user -r requirements.txt
 
+# generating grpc-interface python files
+COPY ./grpc-interfaces /root/grpc-interfaces
+RUN \
+    mkdir -p /root/grpc-interfaces/out && \
+    cd /root/grpc-interfaces && \
+    python3 -m grpc_tools.protoc -I. --python_out=./out --grpc_python_out=./out \
+    cartesi-base.proto logger-high.proto && \
+    2to3 -w -n ./out
 
 FROM python:3.7.5-alpine3.10
 
@@ -41,6 +49,9 @@ WORKDIR $BASE/creepts
 COPY . .
 COPY packlog $BASE/bin/
 COPY unpacklog $BASE/bin/
+
+# copy gRPC generated code
+COPY --from=builder /root/grpc-interfaces/out/*.py creepts/logger/
 
 ENV DISPATCHER_HOST=dispatcher
 ENV DISPATCHER_PORT=3001
