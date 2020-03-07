@@ -36,9 +36,12 @@ cors = CORS(
     allow_methods_list=['GET', 'PUT', 'POST'],
     allow_headers_list=['content-type'])
 
+# this is my eth account address
+address = const.PLAYER_OWN_ADD
+
 api = falcon.API(middleware=[cors.middleware])
-api.add_route('/api/tournaments', Tournaments())
-api.add_route('/api/tournaments/{tournament_id}', Tournaments(), suffix='single')
-api.add_route('/api/tournaments/{tournament_id}/scores/my', Scores(), suffix='my')
-api.add_route('/api/tournaments/{tournament_id}/scores/{player_id}', Scores())
-api.add_route('/api/me', Player())
+api.add_route('/api/tournaments', Tournaments(address))
+api.add_route('/api/tournaments/{tournament_id}', Tournaments(address), suffix='single')
+api.add_route('/api/tournaments/{tournament_id}/scores/my', Scores(address), suffix='my')
+api.add_route('/api/tournaments/{tournament_id}/scores/{player_id}', Scores(address))
+api.add_route('/api/me', Player(address))

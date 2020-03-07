@@ -16,12 +16,21 @@ import yaml
 from datetime import datetime, timezone
 import logging
 from creepts.model.tournament import Tournament, TournamentPhase
-import creepts.constants as const
+from creepts.constants import MAPPED_TOURNAMENT_INFO_FILENAME, MAPPED_MAP_INFO_FILENAME
+from web3 import Web3
 
 class TournamentMappingException(Exception):
     pass
 
 class Mapper:
+
+    def __init__(self, address):
+        if not Web3.isAddress(address):
+            raise ValueError("'{}' is not a valid eth account address".format(address))
+
+        # store as a checksum address
+        self.address = Web3.toChecksumAddress(address)
+
 
     def to_tournament(self, dapp):
         #Should be DApp at first, when removing the test part of the dapp this
@@ -71,9 +80,9 @@ class Mapper:
                         match = match_manager.children[0]
 
                         # checking if player is the challenger or the claimer
-                        if (match["challenger"] == const.PLAYER_OWN_ADD):
+                        if (Web3.toChecksumAddress(match["challenger"]) == self.address):
                             tournament.currentOpponent = match["claimer"]
-                        elif (match["claimer"] == const.PLAYER_OWN_ADD):
+                        elif (Web3.toChecksumAddress(match["claimer"]) == self.address):
                             tournament.currentOpponent = match["challenger"]
 
                     if match_manager["current_state"] == "MatchesOver":
@@ -105,9 +114,9 @@ class Mapper:
                         match = match_manager.children[0]
 
                         # checking if player is the challenger or the claimer
-                        if (match["challenger"] == const.PLAYER_OWN_ADD):
+                        if (Web3.toChecksumAddress(match["challenger"]) == self.address):
                             tournament.currentOpponent = match["claimer"]
-                        elif (match["claimer"] == const.PLAYER_OWN_ADD):
+                        elif (Web3.toChecksumAddress(match["claimer"]) == self.address):
                             tournament.currentOpponent = match["challenger"]
 
         # finally, checking if tournament is in the commit or reveal phases
@@ -134,7 +143,7 @@ class Mapper:
         name = None
         #At the time this is comming from a static file, but should come from the blockchain in the future
         #Loading yaml with the mapped information
-        with open(const.MAPPED_TOURNAMENT_INFO_FILENAME) as tour_info_file:
+        with open(MAPPED_TOURNAMENT_INFO_FILENAME) as tour_info_file:
             tour_info = yaml.full_load(tour_info_file)
             id = dapp.index
 
@@ -147,7 +156,7 @@ class Mapper:
     def _get_map_name(self, dapp):
         name = None
         #Loading yaml with the mapped information
-        with open(const.MAPPED_MAP_INFO_FILENAME) as map_info_file:
+        with open(MAPPED_MAP_INFO_FILENAME) as map_info_file:
             map_info = yaml.full_load(map_info_file)
             if 'level' in dapp.data.keys():
                 lvl = dapp['level']

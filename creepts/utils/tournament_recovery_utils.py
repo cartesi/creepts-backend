@@ -23,9 +23,9 @@ LOGGER = logging
 
 class Fetcher:
 
-    def __init__(self, url = const.DISPATCHER_URL):
+    def __init__(self, address, url = const.DISPATCHER_URL):
         self.dispatcher_api = api.API(url)
-        self.mapper = mapper.Mapper()
+        self.mapper = mapper.Mapper(address)
         self.blockchainDecorator = blockchain.BlockchainDecorator()
         LOGGER.debug("Instantiated fetcher with url %s", url)
 

@@ -25,6 +25,9 @@ from ..model.tournament import TournamentJSONEncoder, TournamentPhase
 LOGGER = logging
 
 class Tournaments:
+    def __init__(self, address):
+        self.tournaments_fetcher = tru.Fetcher(address)
+
     def on_get(self, req, resp):
         """
         Handles the get method for Tournaments resource
@@ -67,12 +70,10 @@ class Tournaments:
         try:
             LOGGER.info("Get tournaments")
             #Recoverign all tournaments from dispatcher
-            tournaments_fetcher = tru.Fetcher()
-
-            tournaments = tournaments_fetcher.get_all_tournaments()
+            tournaments = self.tournaments_fetcher.get_all_tournaments()
 
             #Recovering scores from db and blockchain
-            tournaments = tournaments_fetcher.populate_scores_from_db(tournaments)
+            tournaments = self.tournaments_fetcher.populate_scores_from_db(tournaments)
 
             filtered_tournaments = []
 
@@ -150,15 +151,13 @@ class Tournaments:
 
         try:
             #Recoverign tournament from dispatcher, if it exists
-            tournaments_fetcher = tru.Fetcher()
-
-            tour = tournaments_fetcher.get_tournament(tournament_id)
+            tour = self.tournaments_fetcher.get_tournament(tournament_id)
 
             if tour:
                 #Found the tournament
 
                 #Recovering scores from db and blockchain
-                tour_with_scores = tournaments_fetcher.populate_scores_from_db([tour])[0]
+                tour_with_scores = self.tournaments_fetcher.populate_scores_from_db([tour])[0]
 
                 resp.body = json.dumps(tour_with_scores, cls=TournamentJSONEncoder)
                 resp.status = falcon.HTTP_200

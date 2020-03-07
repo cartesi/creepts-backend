@@ -14,12 +14,19 @@ specific language governing permissions and limitations under the License.
 import falcon
 import json
 import logging
-from .. import constants as const
+from web3 import Web3
 from ..utils import blockchain_utils
 
 LOGGER = logging
 
 class Player:
+    def __init__(self, address):
+        if not Web3.isAddress(address):
+            raise ValueError("'{}' is not a valid eth account address".format(address))
+
+        # store as a checksum address
+        self.address = Web3.toChecksumAddress(address)
+
     def on_get(self, req, resp):
         """
         Handles the get method for Player resource
@@ -41,14 +48,13 @@ class Player:
         """
 
         LOGGER.info("Get player")
-        address = const.PLAYER_OWN_ADD
         balance = 0
 
         try:
-            balance = blockchain_utils.get_player_balance(address)
+            balance = blockchain_utils.get_player_balance(self.address)
         except Exception as e:
             # let's just log the exception and return a zero balance, so it works without the blockchain
             LOGGER.exception(e)
 
-        resp.body = json.dumps({ "address": address, "balance": balance })
+        resp.body = json.dumps({ "address": self.address, "balance": balance })
         resp.status = falcon.HTTP_200

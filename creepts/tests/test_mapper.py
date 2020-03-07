@@ -13,9 +13,10 @@ specific language governing permissions and limitations under the License.
 
 import os
 
-os.environ['ACCOUNT_ADDRESS'] = "0x760841c050d07d3f74139154284d1cd8b5afa9c6"
+address = "0x760841c050d07d3f74139154284d1cd8b5afa9c6"
 #Dummy value
 os.environ['CONTRACTS_DIR'] = "/"
+
 import unittest
 import json
 from creepts.dispatcher.contract import Contract
@@ -24,8 +25,11 @@ from creepts.model.tournament import TournamentPhase
 
 class TestMapper(unittest.TestCase):
 
+    def test_invalid_address(self):
+        self.assertRaises(ValueError, Mapper, '0x0')
+
     def test_mapper_round(self):
-        mapper = Mapper()
+        mapper = Mapper(address)
 
         filename = os.path.join(os.path.dirname(__file__), 'instance_samples/instance_step_7.json')
         with open(filename) as json_file:
@@ -44,8 +48,20 @@ class TestMapper(unittest.TestCase):
         self.assertEqual(tournament.currentOpponent, None)
         self.assertEqual(tournament.winner, None)
 
+    def test_opponent(self):
+        mapper = Mapper(address)
+
+        filename = os.path.join(os.path.dirname(__file__), 'instance_samples/round_opponent.json')
+        with open(filename) as json_file:
+            json_data = json.load(json_file)
+
+        dapp = Contract(json_data)
+        tournament = mapper.to_tournament(dapp)
+
+        self.assertEqual(tournament.currentOpponent, '0x2218b3b41581e3b3fea3d1cb5e37d9c66fa5d3a0')
+
     def test_mapper_end(self):
-        mapper = Mapper()
+        mapper = Mapper(address)
 
         filename = os.path.join(os.path.dirname(__file__), 'instance_samples/instance_step_8.json')
         with open(filename) as json_file:

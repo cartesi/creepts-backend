@@ -28,6 +28,9 @@ from ..model.tournament import TournamentPhase
 
 class Scores:
 
+    def __init__(self, address):
+        self.tournaments_fetcher = tru.Fetcher(address)
+
     def on_put_my(self, req, resp, tournament_id):
         """
         Handles the put method for the own score of a given tournment
@@ -69,9 +72,7 @@ class Scores:
                 raise
 
             #Check if the is a tournament with this id
-            tournaments_fetcher = tru.Fetcher()
-
-            tour = tournaments_fetcher.get_tournament(tournament_id)
+            tour = self.tournaments_fetcher.get_tournament(tournament_id)
 
         except Exception as e:
             if error:
@@ -229,9 +230,7 @@ class Scores:
                 raise falcon.HTTPBadRequest(description="Provided player address is not a valid Ethereum address: {}".format(player_id))
 
             #Check if there is a tournament with this id
-            tournaments_fetcher = tru.Fetcher()
-
-            tour = tournaments_fetcher.get_tournament(tournament_id)
+            tour = self.tournaments_fetcher.get_tournament(tournament_id)
 
             if not tour:
                 #Not found, return 404
