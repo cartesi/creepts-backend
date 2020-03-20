@@ -14,9 +14,9 @@ if [ -z "${MOCKED_SERVER}" ]; then
     dockerize -wait tcp://${DISPATCHER_HOST}:${DISPATCHER_PORT} -timeout ${DISPATCHER_TIMEOUT}
 
     # wait for deployment
-    if [ -z "${NETWORK_ID}" ]; then
+    if [ -n "${DEPLOYMENT_SEMAPHORE}" ]; then
         echo "Waiting for blockchain deployment..."
-        dockerize -wait file://$BASE/share/blockchain/deploy_done -timeout ${TIMEOUT}
+        dockerize -wait ${DEPLOYMENT_SEMAPHORE} -timeout ${TIMEOUT}
     fi
 fi
 
