@@ -21,11 +21,11 @@ LOGGER = logging
 
 class Player:
     def __init__(self, address):
-        if not Web3.isAddress(address):
-            raise ValueError("'{}' is not a valid eth account address".format(address))
+        if not Web3.isAddress(address) or not Web3.isChecksumAddress(address):
+            raise ValueError("'{}' is not a valid eth checksummed account address".format(address))
 
-        # store as a checksum address
-        self.address = Web3.toChecksumAddress(address)
+        # store address
+        self.address = address
 
     def on_get(self, req, resp):
         """

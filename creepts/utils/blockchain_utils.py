@@ -22,7 +22,7 @@ from .. import constants as const
 CONTRACT_CACHE={}
 
 def is_address(address):
-    return Web3.isAddress(address)
+    return Web3.isAddress(address) and Web3.isChecksumAddress(address)
 
 def get_number_of_players(dapp):
 
@@ -50,6 +50,11 @@ def get_number_of_players(dapp):
 
 def player_exists(dapp, address):
 
+    if not is_address(address):
+        error = "Given address is not a valid checksummed Ethereum address: {}".format(address)
+        logging.error(error)
+        raise ValueError(error)
+
     tournament_id = dapp.index
     logging.debug("Checking if player %s is in tournament %d", address, tournament_id)
 
@@ -66,7 +71,7 @@ def player_exists(dapp, address):
     reveal_instance = _get_contract_instance(reveal)
 
     # call the contract function
-    exists = reveal_instance.functions.playerExist(reveal.index, Web3.toChecksumAddress(address)).call()
+    exists = reveal_instance.functions.playerExist(reveal.index, address).call()
 
     logging.info("Player %s exists in tournament %d: %r", address, tournament_id, exists)
 
@@ -75,20 +80,20 @@ def player_exists(dapp, address):
 def get_player_balance(address):
 
     if not is_address(address):
-        error = "Given address is not a valid Ethereum address: {}".format(address)
+        error = "Given address is not a valid checksummed Ethereum address: {}".format(address)
         logging.error(error)
         raise ValueError(error)
 
     logging.info("Querying blockchain for eth balance of address %s", address)
 
     # pylint: disable=no-member
-    balance =  w3.eth.getBalance(Web3.toChecksumAddress(address))
+    balance =  w3.eth.getBalance(address)
     logging.info("Balance for %s : %d", address, balance)
     return balance
 
 def get_player_score(dapp, address):
     if not is_address(address):
-        error = "Given address is not a valid Ethereum address: {}".format(address)
+        error = "Given address is not a valid checksummed Ethereum address: {}".format(address)
         logging.error(error)
         raise ValueError(error)
 
@@ -103,14 +108,14 @@ def get_player_score(dapp, address):
     logging.debug("Got reveal instantiator contract manipulation instance")
 
     # get score from blockchain
-    score = reveal_instance.functions.getScore(reveal.index, Web3.toChecksumAddress(address)).call()
+    score = reveal_instance.functions.getScore(reveal.index, address).call()
     logging.info("Score for player %s in tournament %d is %d", address, tournament_id, score)
 
     return score
 
 def get_player_hash(dapp, address):
     if not is_address(address):
-        error = "Given address is not a valid Ethereum address: {}".format(address)
+        error = "Given address is not a valid checksummed Ethereum address: {}".format(address)
         logging.error(error)
         raise ValueError(error)
 
@@ -125,7 +130,7 @@ def get_player_hash(dapp, address):
     logging.debug("Got reveal instantiator contract manipulation instance")
 
     # get commit hash from blockchain
-    commit_hash = reveal_instance.functions.getLogHash(reveal.index, Web3.toChecksumAddress(address)).call()
+    commit_hash = reveal_instance.functions.getLogHash(reveal.index, address).call()
 
     # convert to hex string
     commit_hash = Web3.toHex(commit_hash)

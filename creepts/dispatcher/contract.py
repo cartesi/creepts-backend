@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 """
 
 import json
+from web3 import Web3
 
 class Contract:
     """Encapsulates the information of a Contract as returned by the dispatcher"""
@@ -40,14 +41,17 @@ class Contract:
         """Converts hexadecimal strings to integers, unless its a ethereum address or blob"""
         if isinstance(value, str):
             # if starts with 0x and has more then 42 characters
-            # consider it a address or binary blob and return string as is
-            if value.startswith("0x") and len(value) >= 42:
-                return value
-
-            # if starts with 0x, assume its a numeric value in hexadecimal and convert to int
             if value.startswith("0x"):
-                return int(value, 16)
-
+                if len(value) == 42:
+                    # consider it as address, convert to checksum address
+                    return Web3.toChecksumAddress(value)
+                elif len(value) > 42:
+                    # consider it a blob, return as is
+                    return value
+                else:
+                    # < 43, consider it a numeric value in hexadecimal, converto to int
+                    return int(value, 16)
+            
         return value
 
     def __getitem__(self, key):
@@ -71,11 +75,11 @@ class Contract:
 
     def get_contract_address(self):
         """Returns the address of the contract in the blockchain"""
-        return self.json_obj["concern"]["contract_address"]
+        return Web3.toChecksumAddress(self.json_obj["concern"]["contract_address"])
 
     def get_user_address(self):
         """Returns the account owner of the contract in the blockchain"""
-        return self.json_obj["concern"]["user_address"]
+        return Web3.toChecksumAddress(self.json_obj["concern"]["user_address"])
 
     name = property(get_name)
     contract_address = property(get_contract_address)

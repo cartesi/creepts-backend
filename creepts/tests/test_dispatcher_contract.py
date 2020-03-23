@@ -26,15 +26,15 @@ class TestDispatcherContract(unittest.TestCase):
 
         dapp = Contract(json_data)
         self.assertEqual(dapp.name, "DAppMock")
-        self.assertEqual(dapp.contract_address, "0x59d956d5eeb2f7d93453ce028d1d4a0bee46543a")
-        self.assertEqual(dapp.user_address, "0xb9fbec4553483b58a11084234587f38377dd7b95")
+        self.assertEqual(dapp.contract_address, "0x59D956d5eEB2F7d93453CE028D1d4A0Bee46543A")
+        self.assertEqual(dapp.user_address, "0xB9fBeC4553483B58A11084234587f38377Dd7b95")
         self.assertEqual(dapp["reveal_index"], 0)
         self.assertEqual(dapp["current_state"], "DAppRunning")
 
         reveal = dapp.children[0]
         self.assertEqual(reveal.name, "RevealMock")
-        self.assertEqual(reveal.contract_address, "0x926fc8818e8666880394665ac5d6d251a7f1a02c")
-        self.assertEqual(reveal.user_address, "0xb9fbec4553483b58a11084234587f38377dd7b95")
+        self.assertEqual(reveal.contract_address, "0x926Fc8818E8666880394665AC5D6D251A7f1A02C")
+        self.assertEqual(reveal.user_address, "0xB9fBeC4553483B58A11084234587f38377Dd7b95")
         self.assertEqual(reveal["commit_duration"], 200)
         self.assertEqual(reveal["reveal_duration"], 200)
         self.assertEqual(reveal["match_manager_epoch_duration"], 100)
@@ -46,8 +46,8 @@ class TestDispatcherContract(unittest.TestCase):
 
         match_manager = reveal.children[0]
         self.assertEqual(match_manager.name, "MatchManager")
-        self.assertEqual(match_manager.contract_address, "0x53d1d41e3952347156c49facc6ef7ab1872ac1a3")
-        self.assertEqual(match_manager.user_address, "0xb9fbec4553483b58a11084234587f38377dd7b95")
+        self.assertEqual(match_manager.contract_address, "0x53D1D41e3952347156c49fACC6Ef7AB1872ac1a3")
+        self.assertEqual(match_manager.user_address, "0xB9fBeC4553483B58A11084234587f38377Dd7b95")
         self.assertEqual(match_manager["epoch_duration"], 100)
         self.assertEqual(match_manager["round_duration"], 50)
         self.assertEqual(match_manager["current_epoch"], 1)
@@ -58,7 +58,7 @@ class TestDispatcherContract(unittest.TestCase):
         self.assertEqual(match_manager["last_match_index"], 2)
         self.assertEqual(match_manager["initial_hash"], "0x3078633765320000000000000000000000000000000000000000000000000000")
         self.assertEqual(match_manager["machine"], "0x0000000000000000000000000000000000000000")
-        self.assertEqual(match_manager["reveal_address"], "0x926fc8818e8666880394665ac5d6d251a7f1a02c")
+        self.assertEqual(match_manager["reveal_address"], "0x926Fc8818E8666880394665AC5D6D251A7f1A02C")
         self.assertEqual(match_manager["reveal_instance"], 0)
         self.assertEqual(match_manager["last_match_epoch"], 1)
         self.assertEqual(match_manager["registered"], False)
@@ -66,10 +66,10 @@ class TestDispatcherContract(unittest.TestCase):
 
         match = match_manager.children[0]
         self.assertEqual(match.name, "Match")
-        self.assertEqual(match.contract_address, "0x0937625b39ec841740558cddbb2b0a9c169b721a")
-        self.assertEqual(match.user_address, "0xb9fbec4553483b58a11084234587f38377dd7b95")
-        self.assertEqual(match["challenger"], "0xb9fbec4553483b58a11084234587f38377dd7b95")
-        self.assertEqual(match["claimer"], "0xb24d40f656f8ccc41c76fcbd36057cd61426e758")
+        self.assertEqual(match.contract_address, "0x0937625B39EC841740558cddBb2B0A9C169B721A")
+        self.assertEqual(match.user_address, "0xB9fBeC4553483B58A11084234587f38377Dd7b95")
+        self.assertEqual(match["challenger"], "0xB9fBeC4553483B58A11084234587f38377Dd7b95")
+        self.assertEqual(match["claimer"], "0xB24d40F656F8cCC41C76fcBd36057Cd61426E758")
         self.assertEqual(match["machine"], "0x0000000000000000000000000000000000000000")
         self.assertEqual(match["epoch_number"], 1)
         self.assertEqual(match["round_duration"], 50)

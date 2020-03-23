@@ -12,8 +12,9 @@ specific language governing permissions and limitations under the License.
 """
 
 import os
+from web3 import Web3
 
-address = "0x760841c050d07d3f74139154284d1cd8b5afa9c6"
+address = Web3.toChecksumAddress("0x760841c050d07d3f74139154284d1cd8b5afa9c6")
 #Dummy value
 os.environ['CONTRACTS_DIR'] = "/"
 
@@ -58,7 +59,7 @@ class TestMapper(unittest.TestCase):
         dapp = Contract(json_data)
         tournament = mapper.to_tournament(dapp)
 
-        self.assertEqual(tournament.currentOpponent, '0x2218b3b41581e3b3fea3d1cb5e37d9c66fa5d3a0')
+        self.assertEqual(tournament.currentOpponent, '0x2218B3b41581E3B3fea3d1CB5e37d9C66fa5d3A0')
 
     def test_mapper_end(self):
         mapper = Mapper(address)
@@ -78,7 +79,7 @@ class TestMapper(unittest.TestCase):
         self.assertEqual(tournament.map, 'original')
         self.assertEqual(tournament.name, 'the perfect one')
         self.assertEqual(tournament.currentOpponent, None)
-        self.assertEqual(tournament.winner, '0x3a0afba9a89cf64dd22a570d833f5da04f3020b6')
+        self.assertEqual(tournament.winner, '0x3a0aFbA9a89cF64DD22a570d833F5da04F3020b6')
 
 if __name__ == '__main__':
     unittest.main()

@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 import os
 import sys
 from cobra_hdwallet import HDWallet
-from web3.auto import w3
+from web3 import Web3
 import logging
 
 hdWallet = HDWallet()
@@ -28,10 +28,10 @@ if 'MNEMONIC' in os.environ.keys():
         '', # no passphrase
         int(os.getenv("ACCOUNT_INDEX", default="0")))
 
-    PLAYER_OWN_ADD = w3.toChecksumAddress(wallet['address'])
+    PLAYER_OWN_ADD = Web3.toChecksumAddress(wallet['address'])
 
 elif 'ACCOUNT_ADDRESS' in os.environ.keys():
-    PLAYER_OWN_ADD = os.environ['ACCOUNT_ADDRESS']
+    PLAYER_OWN_ADD = Web3.toChecksumAddress(os.environ['ACCOUNT_ADDRESS'])
 
 else:
     print('Must define MNEMONIC or ACCOUNT_ADDRESS for the player address')
