@@ -11,6 +11,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
+import os
 import falcon
 import json
 import logging
@@ -56,5 +57,9 @@ class Player:
             # let's just log the exception and return a zero balance, so it works without the blockchain
             LOGGER.exception(e)
 
-        resp.body = json.dumps({ "address": self.address, "balance": balance })
+        resp.body = json.dumps({
+            "address": self.address,
+            "balance": balance,
+            "network_id": blockchain_utils.get_network_id()
+        })
         resp.status = falcon.HTTP_200

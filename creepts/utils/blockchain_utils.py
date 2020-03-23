@@ -24,6 +24,10 @@ CONTRACT_CACHE={}
 def is_address(address):
     return Web3.isAddress(address) and Web3.isChecksumAddress(address)
 
+def get_network_id():
+    # pylint: disable=no-member
+    return w3.net.version
+
 def get_number_of_players(dapp):
 
     tournament_id = dapp.index
@@ -174,14 +178,15 @@ def _get_contract_instance(contract):
     # get the ABI from the truffle json file
     contract_abi = contract_info_data['abi']
 
-    # pylint: disable=no-member
-    net_id = w3.net.version
+    # get network id from connection
+    network_id = get_network_id()
 
     # get the contract address also from the json file
     # XXX: we could use the contract.contract_address that is coming from the dispatcher instead
-    contract_address = contract_info_data['networks'][net_id]['address']
+    contract_address = contract_info_data['networks'][network_id]['address']
 
     #Get contract manipulation instance and store it in the cache
+    # pylint: disable=no-member
     CONTRACT_CACHE[contract_name] = w3.eth.contract(address=contract_address, abi=contract_abi)
 
     return CONTRACT_CACHE[contract_name]
