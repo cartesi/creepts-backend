@@ -123,7 +123,7 @@ class Tournaments:
 
         except Exception as e:
             LOGGER.exception(e)
-            raise falcon.HTTPInternalServerError(description="Failed retrieving tournaments")
+            raise falcon.HTTPInternalServerError(description=str(e))
 
     def on_get_single(self, req, resp, tournament_id):
         """
@@ -153,19 +153,18 @@ class Tournaments:
             #Recoverign tournament from dispatcher, if it exists
             tour = self.tournaments_fetcher.get_tournament(tournament_id)
 
-            if tour:
-                #Found the tournament
+            if not tour:
+                #No matches, return 404
+                raise falcon.HTTPNotFound(description="No tournament with the provided id")
 
-                #Recovering scores from db and blockchain
-                tour_with_scores = self.tournaments_fetcher.populate_scores_from_db([tour])[0]
+            #Found the tournament
 
-                resp.body = json.dumps(tour_with_scores, cls=TournamentJSONEncoder)
-                resp.status = falcon.HTTP_200
-                return
+            #Recovering scores from db and blockchain
+            tour_with_scores = self.tournaments_fetcher.populate_scores_from_db([tour])[0]
+
+            resp.body = json.dumps(tour_with_scores, cls=TournamentJSONEncoder)
+            resp.status = falcon.HTTP_200
 
         except Exception as e:
             LOGGER.exception(e)
-            raise falcon.HTTPInternalServerError(description="Failed retrieving tournament")
-
-        #No matches, return 404
-        raise falcon.HTTPNotFound(description="No tournament with the provided id")
+            raise falcon.HTTPInternalServerError(description=str(e))

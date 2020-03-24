@@ -25,7 +25,7 @@ class BlockchainDecorator:
             # log exception and set value to 0
             logging.error("Failed to recover number of players in tournament %d. Details:", tournament.id)
             logging.exception(e)
-            tournament.playerCount = 0
+            raise e
 
         # get scores from blockchain (opponent and winner)
         self._fetch_scores_from_blockchain(dapp, tournament)
@@ -44,6 +44,7 @@ class BlockchainDecorator:
                 # log exception and keep trying to recover other scores
                 logging.error("Failed to recover score or hash from player %s and tournament %d. Details:", tournament.winner, tournament.id)
                 logging.exception(e)
+                raise e
 
         # getting current opponent score if available
         if tournament.currentOpponent:
@@ -55,6 +56,7 @@ class BlockchainDecorator:
                 #Log exception and keep trying to recover other scores
                 logging.error("Failed to recover score or hash from player %s and tournament %d. Details:", tournament.currentOpponent, tournament.id)
                 logging.exception(e)
+                raise e
 
         # merge old scores with the new ones
         tournament.scores={**tournament.scores, **scores}
