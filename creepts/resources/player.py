@@ -54,8 +54,8 @@ class Player:
         try:
             balance = blockchain_utils.get_player_balance(self.address)
         except Exception as e:
-            # let's just log the exception and return a zero balance, so it works without the blockchain
             LOGGER.exception(e)
+            raise falcon.HTTPInternalServerError(description="Error querying blockchain for account balance")
 
         resp.body = json.dumps({
             "address": self.address,
