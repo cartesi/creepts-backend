@@ -8,7 +8,7 @@ falcors==2.0.0
 gunicorn==19.9.0
 grpcio==1.18.0
 grpcio-tools==1.18.0
-httpie==1.0.3
+httpie==3.1.0
 idna==2.8
 ipython==7.8.0
 ipython-genutils==0.2.0
